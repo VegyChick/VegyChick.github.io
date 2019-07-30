@@ -94,16 +94,31 @@
 
 
 
-  <meta name="description" content="沉迷渗透测试的信安菜鸟">
-<meta property="og:type" content="website">
-<meta property="og:title" content="菜鸟博客">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="0×00 背景 近期看到OWASP TOP 10 2017 版中添加了XXE的内容便对XXE的一些知识进行梳理和总结，XXE可以使用例如http，file等协议，所以可以利用支持的协议进行内网探测和内网入侵，这部分的内容后续在SSRF中补充。 要点：libxml2.9.1及以后，默认不解析外部实体。测试的时候window下使用的是php5.2(libxml Version 2.7.7 ), php">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xxe学习">
+<meta property="og:url" content="http://yoursite.com/2019/07/30/xxe学习/index.html">
 <meta property="og:site_name" content="菜鸟博客">
-<meta property="og:description" content="沉迷渗透测试的信安菜鸟">
+<meta property="og:description" content="0×00 背景 近期看到OWASP TOP 10 2017 版中添加了XXE的内容便对XXE的一些知识进行梳理和总结，XXE可以使用例如http，file等协议，所以可以利用支持的协议进行内网探测和内网入侵，这部分的内容后续在SSRF中补充。 要点：libxml2.9.1及以后，默认不解析外部实体。测试的时候window下使用的是php5.2(libxml Version 2.7.7 ), php">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://image.3001.net/images/20171211/15129732931168.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20171211/15129734664946.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20171211/15129735161149.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20171211/15129736722870.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20171211/1512973900504.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20171211/15129739223096.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20171211/15129740453963.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20171211/1512974092509.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20171211/15129741091027.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20171211/15129741255397.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20171211/15129741458706.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20171211/15129745755040.png!small">
+<meta property="og:image" content="https://image.3001.net/images/20171211/1512974695640.png!small">
+<meta property="og:updated_time" content="2019-07-30T11:52:31.883Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="菜鸟博客">
-<meta name="twitter:description" content="沉迷渗透测试的信安菜鸟">
+<meta name="twitter:title" content="xxe学习">
+<meta name="twitter:description" content="0×00 背景 近期看到OWASP TOP 10 2017 版中添加了XXE的内容便对XXE的一些知识进行梳理和总结，XXE可以使用例如http，file等协议，所以可以利用支持的协议进行内网探测和内网入侵，这部分的内容后续在SSRF中补充。 要点：libxml2.9.1及以后，默认不解析外部实体。测试的时候window下使用的是php5.2(libxml Version 2.7.7 ), php">
+<meta name="twitter:image" content="https://image.3001.net/images/20171211/15129732931168.png!small">
 
 
 
@@ -111,7 +126,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/">
+  <link rel="canonical" href="http://yoursite.com/2019/07/30/xxe学习/">
 
 
 
@@ -121,7 +136,7 @@
   };
 </script>
 
-  <title>菜鸟博客</title>
+  <title>xxe学习 | 菜鸟博客</title>
   
 
 
@@ -169,8 +184,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -208,7 +222,7 @@
         
         
           
-          <li class="menu-item menu-item-home menu-item-active">
+          <li class="menu-item menu-item-home">
 
     
     
@@ -268,9 +282,9 @@
           
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -302,10 +316,8 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/07/30/xxe学习/" class="post-title-link" itemprop="url">xxe学习</a>
+          <h1 class="post-title" itemprop="name headline">xxe学习
+
               
             
           </h1>
@@ -372,9 +384,7 @@
       
 
       
-        
-          
-            <p>0×00 背景</p>
+        <p>0×00 背景</p>
 <p>近期看到OWASP TOP 10 2017 版中添加了XXE的内容便对XXE的一些知识进行梳理和总结，XXE可以使用例如http，file等协议，所以可以利用支持的协议进行内网探测和内网入侵，这部分的内容后续在SSRF中补充。</p>
 <p>要点：libxml2.9.1及以后，默认不解析外部实体。测试的时候window下使用的是php5.2(libxml Version 2.7.7 ), php5.3(libxml Version 2.7.8)。Linux中需要将libxml低于libxml2.9.1的版本编译到PHP中，可以使用phpinfo()查看libxml的版本信息。 </p>
 <p>参考链接：</p>
@@ -629,8 +639,6 @@
 <p><a href="https://github.com/BuffaloWill/oxml_xxe/tree/master/samples" target="_blank" rel="noopener">https://github.com/BuffaloWill/oxml_xxe/tree/master/samples</a></p>
 <p><a href="https://github.com/CHYbeta/Web-Security-Learning#xxe" target="_blank" rel="noopener">https://github.com/CHYbeta/Web-Security-Learning#xxe</a></p>
 <h3 id="转载自：https-www-freebuf-com-column-156863-html"><a href="#转载自：https-www-freebuf-com-column-156863-html" class="headerlink" title="转载自：https://www.freebuf.com/column/156863.html"></a>转载自：<a href="https://www.freebuf.com/column/156863.html" target="_blank" rel="noopener">https://www.freebuf.com/column/156863.html</a></h3>
-          
-        
       
     </div>
 
@@ -653,213 +661,28 @@
       
 
       
-
-      
-
       
       
-        <div class="post-eof"></div>
+
       
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/30/Google-hack-常用命令/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="VegyChick">
-      <meta itemprop="description" content="沉迷渗透测试的信安菜鸟">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="菜鸟博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/07/30/Google-hack-常用命令/" class="post-title-link" itemprop="url">Google hack 常用命令</a>
-              
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-07-30 18:43:10 / 修改时间：19:10:50" itemprop="dateCreated datePublished" datetime="2019-07-30T18:43:10+08:00">2019-07-30</time>
-            </span>
-          
-
-          
+              <a href="/2019/07/30/Google-hack-常用命令/" rel="next" title="Google hack 常用命令">
+                <i class="fa fa-chevron-left"></i> Google hack 常用命令
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <h1 id="Google-Hack搜索总结"><a href="#Google-Hack搜索总结" class="headerlink" title="Google Hack搜索总结"></a>Google Hack搜索总结</h1><h2 id="常用关键字"><a href="#常用关键字" class="headerlink" title="常用关键字"></a>常用关键字</h2><ol>
-<li>site        —-搜索指定网站的内容</li>
-</ol>
-<p>（示例：”网络安全 site:<a href="http://www.baidu.com&quot;" target="_blank" rel="noopener">www.baidu.com&quot;</a> 意为 搜索 <a href="http://www.baidu.com" target="_blank" rel="noopener">www.baidu.com</a> 这个网站中含有”网络安全”内容的网页）</p>
-<p>（建议不加www，这样site:baidu.com，可以查询目标网站的二级域名等，能获得更多的信息）</p>
-<ol start="2">
-<li>intitle     —-搜索网站标题中包含此关键字的网站</li>
-</ol>
-<p>（示例：”intitle:网络安全” 意为 搜索网站标题含有”网络安全”的网页）</p>
-<p>（可用 “site:xx.com intitle:管理|后台|登录|admin|login” 等方式查询后台登录页面）</p>
-<ol start="3">
-<li>allintitle  —-搜索标题中包括多个关键字的网页</li>
-</ol>
-<p>（示例：”allintitle:网络安全 web安全” 意为 搜索网站标题含有”网络安全”和”web安全“的网页）</p>
-<ol start="4">
-<li>inurl      —-搜索网站url中包含此关键字的网站</li>
-</ol>
-<p>（示例：”inurl:php?id=” 意为 搜索网站url中包括了”php?id=”关键字的网站，寻找可能含有sql注入的网页）</p>
-<p>（注：”inurl:”后不能接空格，应直接接关键词）</p>
-<p>（inurl在搜索资源的功能上十分的强大，目前filetype:用法google无法使用）</p>
-<p>（示例：”inurl:”say something” mp3” 可搜索到say something的mp3文件）</p>
-<ol start="5">
-<li>allinurl   —-搜索网站url中包含多个关键字的网站</li>
-</ol>
-<p>（示例：”allinurl:”say something” mp3” 意为 搜索网站url中包括了”say someting” 和 “mp3”关键字的网站）</p>
-<ol start="6">
-<li>intext       —-搜索正文中包含关键字的网页</li>
-</ol>
-<p>（示例：”intext:网络安全” 意为 搜索正文中包含有”网络安全”内容的网页）</p>
-<ol start="7">
-<li>filetype     —-指定文件类型</li>
-</ol>
-<p>（目前测试中无法使用该语法，可试filetype mp3，filetype:mp3带:冒号格式的语法测试后无法使用）</p>
-<ol start="8">
-<li>link            —-查询有链接到指定链接的网站</li>
-</ol>
-<p>（link无法混合其他的语法 如inurl、site使用，使用了也会被过滤掉）</p>
-<h2 id="基本搜索"><a href="#基本搜索" class="headerlink" title="基本搜索"></a>基本搜索</h2><ol>
-<li>和：+/and</li>
-</ol>
-<p>（在google搜索中，和 用空格即可表示，可以不用逻辑符号）</p>
-<p>（示例：intext:”网络安全” + “web安全” 意为搜索正文中含有”网络安全”也含有”web安全”的网页）</p>
-<p>（等同于：intext:”网络安全” “web安全”） </p>
-<ol start="2">
-<li>或： OR/|</li>
-</ol>
-<p>（注意OR是大写，小写or在搜索中会被过滤掉，竖线 | 也表示或者的意思）</p>
-<ol start="3">
-<li>不包括(非)：-</li>
-</ol>
-<p>（搜索内容中不包含-号后面接的关键字）</p>
-<p>（示例：intext:”网络安全” -“web安全” 意为只搜索正文中含有”网络安全”的关键字而不含”web安全”的网页）</p>
-<h2 id="提示"><a href="#提示" class="headerlink" title="提示"></a>提示</h2><p>  Google 不支持通配符。</p>
-<p>  对大小写不敏感，搜索GOOGLE等同于google。</p>
-<p>  对整个句子的搜索，需要加双引号。</p>
-<p>  问号，句号，逗号等符号无法成为搜索关键字。</p>
-<h4 id="来源：https-blog-csdn-net-qq-37964989-article-details-84325338"><a href="#来源：https-blog-csdn-net-qq-37964989-article-details-84325338" class="headerlink" title="来源：https://blog.csdn.net/qq_37964989/article/details/84325338"></a>来源：<a href="https://blog.csdn.net/qq_37964989/article/details/84325338" target="_blank" rel="noopener">https://blog.csdn.net/qq_37964989/article/details/84325338</a></h4>
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -869,14 +692,15 @@
   </article>
 
 
-    
-  </section>
-
-  
+  </div>
 
 
           </div>
           
+
+  
+
+
 
         </div>
         
@@ -896,8 +720,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -943,6 +776,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#转载自：https-www-freebuf-com-column-156863-html"><span class="nav-number">1.</span> <span class="nav-text">转载自：https://www.freebuf.com/column/156863.html</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       
@@ -1071,6 +921,10 @@
 
 
   
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
 
   
 
@@ -1086,6 +940,8 @@
 
   
 
+
+  
 
 
   
