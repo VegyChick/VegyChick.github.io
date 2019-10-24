@@ -285,6 +285,245 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/24/XSS32个触发事件/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="VegyChick">
+      <meta itemprop="description" content="沉迷渗透测试的信安菜鸟">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="菜鸟博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/10/24/XSS32个触发事件/" class="post-title-link" itemprop="url">XSS32个触发事件</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-24 16:01:26 / 修改时间：16:01:40" itemprop="dateCreated datePublished" datetime="2019-10-24T16:01:26+08:00">2019-10-24</time>
+            </span>
+          
+
+          
+            
+
+            
+          
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>1、onmouseenter：当鼠标进入选区执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red&quot; onmouseenter=&quot;alert(bem)&quot;&gt;123456&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>2、onmouseleave：当鼠标离开选区执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;DIV onmouseleave=&quot;alert(‘bem‘)&quot; style=&quot;BACKGROUND-COLOR: red&quot;&gt;123456&lt;/DIV&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>3、onmousewheel：当鼠标在选区滚轮时执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;DIV onmousewheel=&quot;alert(‘bem‘)&quot; style=&quot;BACKGROUND-COLOR: red&quot;&gt;123456&lt;/DIV&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>4、onscroll：拖动滚动条执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;width:100px;height:100px;overflow:scroll&quot; onscroll=&quot;alert(bem)&quot;&gt;123456</span><br><span class="line">  &lt;br/&gt;</span><br><span class="line">  &lt;br/&gt;</span><br><span class="line">  &lt;br/&gt;</span><br><span class="line">  &lt;br/&gt;</span><br><span class="line">  &lt;br/&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">1234567</span><br></pre></td></tr></table></figure>
+
+<p>5、onfocusin：当获得焦点时执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;background-color:red&quot; onfocusin=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>6、onfocusout：当失去焦点时执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;background-color:red&quot; onfocusout=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>7、onstart：当显示内容时执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;marquee style=&quot;background-color:red&quot; onstart=&quot;alert(bem)&quot; &gt;asdf&lt;/marquee&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>8、onbeforecopy：选中内容后右键执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red;&quot; onbeforecopy=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>9、onbeforecut：选中内容后右键执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red;&quot; onbeforecut=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>10、onbeforeeditfocus：当获得焦点时执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red;&quot; contentEditable=&quot;true&quot; onbeforeeditfocus=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>11、onbeforepaste：选中内容后右键执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red;&quot; =&quot;true&quot; onbeforepaste=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>12、oncontextmenu：鼠标右键执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red;&quot; oncontextmenu=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>13、oncopy：鼠标右键执行复制时执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red;&quot; oncopy=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>14、oncut：鼠标右键执行剪切时执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;background-color:red;&quot; oncut=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>15、ondrag：选择内容并拖动时执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red;&quot; ondrag=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>16、ondragend：选择内容并拖动松开鼠标执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red;&quot; ondragend=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>17、ondragenter：选择内容并拖动时执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red;&quot; ondragenter=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>18、ondragleave：选择内容并拖出边框执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;background-color:red;&quot; ondragleave=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>19、ondragover：选择内容并拖动时执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;background-color:red;&quot; ondragover=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>20、ondragstart：选择内容并拖动时执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;background-color:red;&quot; ondragstart=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>21、ondrop：有内容被拖动进来时执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;&quot; ondrop=&quot;alert(bem)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;&quot; ondrop=&quot;alert(bem)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">12</span><br></pre></td></tr></table></figure>
+
+<p>22、onlosecapture：选择内容时执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;&quot; onlosecapture=&quot;alert(bem)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>23、onpaste：粘贴时执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;&quot; onpaste=&quot;alert(bem)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>24、onselectstart：选择内容时执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;&quot; onselectstart=&quot;alert(bem)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>25、onhelp：进入焦点按F1时执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;&quot; onhelp=&quot;alert(bem)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>26、onEnd：当时间线执行完毕时执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div STYLE=&quot;behavior:url(#default#time2)&quot; onEnd=&quot;alert(bem)&quot;&gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>27、onBegin：当时间线开始执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div STYLE=&quot;behavior:url(#default#time2)&quot; onBegin=&quot;alert(bem)&quot;&gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>28、onactivate：激活当前标签时执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; STYLE=&quot;&quot; onactivate=&quot;alert(bem)&quot;&gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>29、onfilterchange：当滤镜改变时执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; STYLE=&quot;filter: Alpha(opacity=100, style=2);&quot; onfilterchange=&quot;alert(bem)&quot;&gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>30、onbeforeactivate：当激活当前标签时执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; STYLE=&quot;&quot; onbeforeactivate=&quot;alert(bem)&quot;&gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>31、onbeforedeactivate：当标签内值改变时执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; STYLE=&quot;&quot; onbeforedeactivate=&quot;alert(bem)&quot;&gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>32、ondeactivate：当标签内值改变时执行代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; STYLE=&quot;&quot; ondeactivate=&quot;alert(bem)&quot;&gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/24/Fastjson漏洞分析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2385,155 +2624,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/16/ERC20标准/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="VegyChick">
-      <meta itemprop="description" content="沉迷渗透测试的信安菜鸟">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="菜鸟博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/10/16/ERC20标准/" class="post-title-link" itemprop="url">ERC20标准</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-10-16 19:30:58 / 修改时间：19:31:19" itemprop="dateCreated datePublished" datetime="2019-10-16T19:30:58+08:00">2019-10-16</time>
-            </span>
-          
-
-          
-            
-
-            
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="ERC20标准涵盖了哪些内容？"><a href="#ERC20标准涵盖了哪些内容？" class="headerlink" title="ERC20标准涵盖了哪些内容？"></a>ERC20标准涵盖了哪些内容？</h2><p>我们可以在<a href="https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md查看ERC20代币的标准API。" target="_blank" rel="noopener">https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md查看ERC20代币的标准API。</a></p>
-<h3 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h3><p>在Method目录下面我们可以看到一些方法，所有的ERC20代币都是按照下面这些方法来定义的。下面我们讲解一下每个方法的作用。<br>name<br>function name() constant returns (string name)<br>返回string类型的ERC20代币的名字，例如：StatusNetwork<br>symbol<br>function symbol() constant returns (string symbol)<br>返回string类型的ERC20代币的符号，也就是代币的简称，例如：SNT。<br>decimals<br>function decimals() constant returns (uint8 decimals)<br>支持几位小数点后几位。如果设置为3。也就是支持0.001表示。<br>totalSupply<br>function totalSupply() constant returns (uint256 totalSupply)<br>发行代币的总量，可以通过这个函数来获取。所有智能合约发行的代币总量是一定的，totalSupply必须设置初始值。如果不设置初始值，这个代币发行就说明有问题。<br>balanceOf<br>function balanceOf(address _owner) constant returns (uint256 balance)<br>输入地址，可以获取该地址代币的余额。<br>transfer<br>function transfer(address _to, uint256 _value) returns (bool success)<br>调用transfer函数将自己的token转账给_to地址，_value为转账个数<br>approve<br>function approve(address _spender, uint256 _value) returns (bool success)<br>批准_spender账户从自己的账户转移_value个token。可以分多次转移。<br>transferFrom<br>function transferFrom(address _from, address _to, uint256 _value) returns (bool success)<br>与approve搭配使用，approve批准之后，调用transferFrom函数来转移token。<br>allowance<br>function allowance(address _owner, address _spender) constant returns (uint256 remaining)<br>返回_spender还能提取token的个数。<br>approve、transferFrom及allowance解释：<br>账户A有1000个ETH，想允许B账户随意调用100个ETH。A账户按照以下形式调用approve函数approve(B,100)。当B账户想用这100个ETH中的10个ETH给C账户时，则调用transferFrom(A, C, 10)。这时调用allowance(A, B)可以查看B账户还能够调用A账户多少个token。</p>
-<h3 id="Events"><a href="#Events" class="headerlink" title="Events"></a>Events</h3><p>Transfer<br>event Transfer(address indexed _from, address indexed _to, uint256 _value)<br>当成功转移token时，一定要触发Transfer事件<br>Approval<br>event Approval(address indexed _owner, address indexed _spender, uint256 _value)<br>当调用approval函数成功时，一定要触发Approval事件</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>如果项目方要在以太坊上发行代币来进行融资，一定会按照这个标准来实现相应的函数。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2580,7 +2670,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">18</span>
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
