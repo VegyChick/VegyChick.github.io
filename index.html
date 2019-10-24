@@ -285,6 +285,182 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/24/sql注入之参数污染绕waf/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="VegyChick">
+      <meta itemprop="description" content="沉迷渗透测试的信安菜鸟">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="菜鸟博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/10/24/sql注入之参数污染绕waf/" class="post-title-link" itemprop="url">sql注入之参数污染绕waf</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-24 16:40:04 / 修改时间：16:40:27" itemprop="dateCreated datePublished" datetime="2019-10-24T16:40:04+08:00">2019-10-24</time>
+            </span>
+          
+
+          
+            
+
+            
+          
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="hpp参数污染了解"><a href="#hpp参数污染了解" class="headerlink" title="hpp参数污染了解"></a>hpp参数污染了解</h1><p>HPP是HTTP Parameter Pollution的缩写。<br>这个漏洞由S. di Paola 与L. Caret Toni在2009年的OWASP上首次公布。这也是一种注入型的漏洞，攻击者通过在HTTP请求中插入特定的参数来发起攻击。如果Web应用中存在这样的漏洞，可以被攻击者利用来进行客户端或者服务器端的攻击。<br>通过hpp参数污染可以达到绕过sqlwaf，上传waf来进行攻击。</p>
+<h1 id="hpp参数污染原理"><a href="#hpp参数污染原理" class="headerlink" title="hpp参数污染原理"></a>hpp参数污染原理</h1><p>在跟服务器交互的过程中，http允许 get 或者post多次传同一参数值，造成覆盖达到一些绕过waf的效果。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">GET /foo?par1=val1&amp;par2=val2 HTTP/1.1</span><br><span class="line">User-Agent: Mozilla/5.0</span><br><span class="line">Host: Host</span><br><span class="line">Accept: */*</span><br></pre></td></tr></table></figure>
+
+<p>如上面的http请求，一般同一参数名字只能传参一次，但是http协议中允许同样名称的参数出现多次。</p>
+<p>但是不同的服务器处理方式会不一样，比如：<br>必应</p>
+<p><a href="https://s2.ax1x.com/2019/03/11/ACHIeJ.png" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2019/03/11/ACHIeJ.png" alt="img"></a></p>
+<p>我们输入了两次q参数，第一次为aa第二次为bb被覆盖了，</p>
+<p>谷歌</p>
+<p><a href="https://s2.ax1x.com/2019/03/11/ACbPYt.png" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2019/03/11/ACbPYt.png" alt="img"></a></p>
+<p>输入两个q参数可以看到都被加载到了浏览器搜索中。没有覆盖</p>
+<p>如果同时提供2个搜索的关键字参数给Google，那么Google会对2个参数都进行查询；但是必应则不一样，它只会处理后面一个参数。下面这个表简单列举了一些常见的Web服务器对同样名称的参数出现多次的处理方式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Web服务器               参数获取函数                       获取到的参数</span><br><span class="line"></span><br><span class="line">PHP/Apache           $_GET(“par”)                       Last</span><br><span class="line">JSP/Tomcat           Request.getParameter(“par”)       First</span><br><span class="line">Perl(CGI)/Apache       Param(“par”)                       First</span><br><span class="line">Python/Apache       getvalue(“par”)                   All (List)</span><br><span class="line">ASP/IIS               Request.QueryString(“par”)       All (comma-delimited string)</span><br></pre></td></tr></table></figure>
+
+<h1 id="参数污染实例"><a href="#参数污染实例" class="headerlink" title="参数污染实例"></a>参数污染实例</h1><h2 id="waf绕过"><a href="#waf绕过" class="headerlink" title="waf绕过"></a>waf绕过</h2><p>这种服务器的解析方式本身没有什么缺陷，但是如果配合一些waf规则以及其他规则，则有可能造成一些危害，根据waf解析的先后规则则有可能绕过waf设置的原意。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$sql = &quot;select * from admin where id=1&quot;;</span><br><span class="line">$sql=$sql.&quot;&quot;.$_POST[&apos;bbs&apos;];</span><br><span class="line"></span><br><span class="line">echo $sql;</span><br><span class="line"></span><br><span class="line">$pattern=&apos;/^.*union.*$/&apos;;</span><br><span class="line"></span><br><span class="line">if(preg_match($pattern, $sql))</span><br><span class="line">&#123;echo &quot;注入测试   &quot;;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在特定情况下 bbs=u&amp;bbs=n&amp;bbs=i&amp;bbs=o&amp;bbs=n&amp;bbs=select 1,user(),3<br>可以绕过一些waf，在CTF中也有出现。<br>将参数分离写入，waf在输入之后就开始拦截，在后端又拼接成完整的union，根据一些特定服务器就可以绕过waf进行注入。</p>
+<h2 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h2><p>先看一个上传数据包。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">POST /upload.php HTTP/1.1</span><br><span class="line"></span><br><span class="line">Host: 192.168.1.100</span><br><span class="line"></span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0</span><br><span class="line"></span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</span><br><span class="line"></span><br><span class="line">Accept-Language: zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3</span><br><span class="line"></span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line"></span><br><span class="line">Referer: http://192.168.1.100/</span><br><span class="line"></span><br><span class="line">Cookie:yunsuo_session_verify=1a9c7117538a7a9bce39a4695ff3f0cc; safedog-flow-item=</span><br><span class="line"></span><br><span class="line">X-Forwarded-For: 1.1.1.1</span><br><span class="line"></span><br><span class="line">CLIENT_IP: 2.2.2.2</span><br><span class="line"></span><br><span class="line">Connection: keep-alive</span><br><span class="line"></span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line"></span><br><span class="line">Content-Type:multipart/form-data; boundary=---------------------------440470572354</span><br><span class="line"></span><br><span class="line">Content-Length: 1089</span><br><span class="line"></span><br><span class="line">-----------------------------440470572354</span><br><span class="line"></span><br><span class="line">Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;n.php&quot;</span><br><span class="line"></span><br><span class="line">Content-Type: application/octet-stream</span><br><span class="line"></span><br><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">Phpinfo();</span><br><span class="line"></span><br><span class="line">?&gt;</span><br><span class="line"></span><br><span class="line">-----------------------------440470572354</span><br><span class="line"></span><br><span class="line">Content-Disposition: form-data; name=&quot;submit&quot;</span><br><span class="line"></span><br><span class="line">Submit</span><br><span class="line">-----------------------------440470572354--</span><br></pre></td></tr></table></figure>
+
+<p>Content-Type:multipart/form-data; 指代的是这个数据是来自表单提交的</p>
+<p>某些WAF是通过Content-Type识别是否是文件上传数据包。假设我们将Content-Type更改，数据包也是正常提交过去的。这个就完成了一次bypass。</p>
+<p>还有的时候就是Content-Disposition: form-data;，也有某些WAF是根据Content-Disposition匹配filename的，用于验证黑名单。我们经过混淆大小写也是可以bypass的。(<a href="http://www.secpulse.com/archives/56523.html" target="_blank" rel="noopener">http://www.secpulse.com/archives/56523.html</a>)</p>
+<p>拦截：</p>
+<p><a href="http://www.secpulse.com/wp-content/uploads/2017/03/waf4.png" target="_blank" rel="noopener"><img src="http://www.secpulse.com/wp-content/uploads/2017/03/waf4.png" alt="img"></a><br><a href="http://www.secpulse.com/wp-content/uploads/2017/03/waf5.png" target="_blank" rel="noopener"><img src="http://www.secpulse.com/wp-content/uploads/2017/03/waf5.png" alt="img"></a></p>
+<p>在HPP中最典型的的例子就是“双文件上传”。</p>
+<p>就是在协议中，提交两个相同的值，达到欺骗WAF一次匹配的目的。在这里提点一下http协议中参数名与参数值的结构。</p>
+<p><a href="http://www.secpulse.com/wp-content/uploads/2017/03/waf6-1024x398.png" target="_blank" rel="noopener"><img src="http://www.secpulse.com/wp-content/uploads/2017/03/waf6-1024x398.png" alt="img"></a></p>
+<p>可以看到filename参数写了两次，可能绕过一些上传限制。</p>
+<h2 id="xss"><a href="#xss" class="headerlink" title="xss"></a>xss</h2><p>当然这种特性有时候也可以测试xss漏洞，原理一样。暂不测试。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/24/XSS32个触发事件/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2412,220 +2588,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/17/详说Cookie-LocalStorage与SessionStorage/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="VegyChick">
-      <meta itemprop="description" content="沉迷渗透测试的信安菜鸟">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="菜鸟博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/10/17/详说Cookie-LocalStorage与SessionStorage/" class="post-title-link" itemprop="url">详说Cookie,LocalStorage与SessionStorage</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-10-17 10:44:44 / 修改时间：10:45:07" itemprop="dateCreated datePublished" datetime="2019-10-17T10:44:44+08:00">2019-10-17</time>
-            </span>
-          
-
-          
-            
-
-            
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><h4 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h4><p>Cookie 是小甜饼的意思。顾名思义，cookie 确实非常小，它的大小限制为4KB左右，是网景公司的前雇员 Lou Montulli 在1993年3月的发明。它的主要用途有保存登录信息，比如你登录某个网站市场可以看到“记住密码”，这通常就是通过在 Cookie 中存入一段辨别用户身份的数据来实现的。</p>
-<h4 id="localStorage"><a href="#localStorage" class="headerlink" title="localStorage"></a>localStorage</h4><p>localStorage 是 HTML5 标准中新加入的技术，它并不是什么划时代的新东西。早在 IE 6 时代，就有一个叫 userData 的东西用于本地存储，而当时考虑到浏览器兼容性，更通用的方案是使用 Flash。而如今，localStorage 被大多数浏览器所支持，如果你的网站需要支持 IE6+，那以 userData 作为你的 polyfill 的方案是种不错的选择。</p>
-<table>
-<thead>
-<tr>
-<th>特性</th>
-<th>Chrome</th>
-<th>Firefox (Gecko)</th>
-<th>Internet Explorer</th>
-<th>Opera</th>
-<th>Safari (WebKit)</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>localStorage</td>
-<td>4</td>
-<td>3.5</td>
-<td>8</td>
-<td>10.50</td>
-<td>4</td>
-</tr>
-<tr>
-<td>sessionStorage</td>
-<td>5</td>
-<td>2</td>
-<td>8</td>
-<td>10.50</td>
-<td>4</td>
-</tr>
-</tbody></table>
-<h4 id="sessionStorage"><a href="#sessionStorage" class="headerlink" title="sessionStorage"></a>sessionStorage</h4><p>sessionStorage 与 localStorage 的接口类似，但保存数据的生命周期与 localStorage 不同。做过后端开发的同学应该知道 Session 这个词的意思，直译过来是“会话”。而 sessionStorage 是一个前端的概念，它只是可以将一部分数据在当前会话中保存下来，刷新页面数据依旧存在。但当页面关闭后，sessionStorage 中的数据就会被清空。</p>
-<h2 id="三者的异同"><a href="#三者的异同" class="headerlink" title="三者的异同"></a>三者的异同</h2><table>
-<thead>
-<tr>
-<th>特性</th>
-<th>Cookie</th>
-<th>localStorage</th>
-<th>sessionStorage</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>数据的生命期</td>
-<td>一般由服务器生成，可设置失效时间。如果在浏览器端生成Cookie，默认是关闭浏览器后失效</td>
-<td>除非被清除，否则永久保存</td>
-<td>仅在当前会话下有效，关闭页面或浏览器后被清除</td>
-</tr>
-<tr>
-<td>存放数据大小</td>
-<td>4K左右</td>
-<td>一般为5MB</td>
-<td></td>
-</tr>
-<tr>
-<td>与服务器端通信</td>
-<td>每次都会携带在HTTP头中，如果使用cookie保存过多数据会带来性能问题</td>
-<td>仅在客户端（即浏览器）中保存，不参与和服务器的通信</td>
-<td></td>
-</tr>
-<tr>
-<td>易用性</td>
-<td>需要程序员自己封装，源生的Cookie接口不友好</td>
-<td>源生接口可以接受，亦可再次封装来对Object和Array有更好的支持</td>
-<td></td>
-</tr>
-</tbody></table>
-<h4 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h4><p>有了对上面这些差别的直观理解，我们就可以讨论三者的应用场景了。</p>
-<p>因为考虑到每个 HTTP 请求都会带着 Cookie 的信息，所以 Cookie 当然是能精简就精简啦，比较常用的一个应用场景就是判断用户是否登录。针对登录过的用户，服务器端会在他登录时往 Cookie 中插入一段加密过的唯一辨识单一用户的辨识码，下次只要读取这个值就可以判断当前用户是否登录啦。曾经还使用 Cookie 来保存用户在电商网站的购物车信息，如今有了 localStorage，似乎在这个方面也可以给 Cookie 放个假了~</p>
-<p>而另一方面 localStorage 接替了 Cookie 管理购物车的工作，同时也能胜任其他一些工作。比如HTML5游戏通常会产生一些本地数据，localStorage 也是非常适用的。如果遇到一些内容特别多的表单，为了优化用户体验，我们可能要把表单页面拆分成多个子页面，然后按步骤引导用户填写。这时候 sessionStorage 的作用就发挥出来了。</p>
-<h2 id="安全性的考虑"><a href="#安全性的考虑" class="headerlink" title="安全性的考虑"></a>安全性的考虑</h2><p>需要注意的是，不是什么数据都适合放在 Cookie、localStorage 和 sessionStorage 中的。使用它们的时候，需要时刻注意是否有代码存在 XSS 注入的风险。因为只要打开控制台，你就随意修改它们的值，也就是说如果你的网站中有 XSS 的风险，它们就能对你的 localStorage 肆意妄为。所以千万不要用它们存储你系统中的敏感数据。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2672,7 +2634,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">19</span>
+                    <span class="site-state-item-count">20</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
