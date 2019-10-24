@@ -94,17 +94,17 @@
 
 
 
-  <meta name="description" content="1、onmouseenter：当鼠标进入选区执行代码 12&amp;lt;div style=&amp;quot;background-color:red&amp;quot; onmouseenter=&amp;quot;alert(bem)&amp;quot;&amp;gt;123456&amp;lt;/div&amp;gt;1  2、onmouseleave：当鼠标离开选区执行代码 12&amp;lt;DIV onmouseleave=&amp;quot;alert(‘b">
+  <meta name="description" content="1、onmouseenter：当鼠标进入选区执行代码 1&amp;lt;div style=&amp;quot;background-color:red&amp;quot; onmouseenter=&amp;quot;alert(bem)&amp;quot;&amp;gt;123456&amp;lt;/div&amp;gt;  2、onmouseleave：当鼠标离开选区执行代码 1&amp;lt;DIV onmouseleave=&amp;quot;alert(‘bem‘">
 <meta property="og:type" content="article">
 <meta property="og:title" content="XSS32个触发事件">
 <meta property="og:url" content="http://yoursite.com/2019/10/24/XSS32个触发事件/index.html">
 <meta property="og:site_name" content="菜鸟博客">
-<meta property="og:description" content="1、onmouseenter：当鼠标进入选区执行代码 12&amp;lt;div style=&amp;quot;background-color:red&amp;quot; onmouseenter=&amp;quot;alert(bem)&amp;quot;&amp;gt;123456&amp;lt;/div&amp;gt;1  2、onmouseleave：当鼠标离开选区执行代码 12&amp;lt;DIV onmouseleave=&amp;quot;alert(‘b">
+<meta property="og:description" content="1、onmouseenter：当鼠标进入选区执行代码 1&amp;lt;div style=&amp;quot;background-color:red&amp;quot; onmouseenter=&amp;quot;alert(bem)&amp;quot;&amp;gt;123456&amp;lt;/div&amp;gt;  2、onmouseleave：当鼠标离开选区执行代码 1&amp;lt;DIV onmouseleave=&amp;quot;alert(‘bem‘">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-10-24T08:01:40.397Z">
+<meta property="og:updated_time" content="2019-10-24T08:20:39.795Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="XSS32个触发事件">
-<meta name="twitter:description" content="1、onmouseenter：当鼠标进入选区执行代码 12&amp;lt;div style=&amp;quot;background-color:red&amp;quot; onmouseenter=&amp;quot;alert(bem)&amp;quot;&amp;gt;123456&amp;lt;/div&amp;gt;1  2、onmouseleave：当鼠标离开选区执行代码 12&amp;lt;DIV onmouseleave=&amp;quot;alert(‘b">
+<meta name="twitter:description" content="1、onmouseenter：当鼠标进入选区执行代码 1&amp;lt;div style=&amp;quot;background-color:red&amp;quot; onmouseenter=&amp;quot;alert(bem)&amp;quot;&amp;gt;123456&amp;lt;/div&amp;gt;  2、onmouseleave：当鼠标离开选区执行代码 1&amp;lt;DIV onmouseleave=&amp;quot;alert(‘bem‘">
 
 
 
@@ -328,7 +328,7 @@
                 
               
 
-              <time title="创建时间：2019-10-24 16:01:26 / 修改时间：16:01:40" itemprop="dateCreated datePublished" datetime="2019-10-24T16:01:26+08:00">2019-10-24</time>
+              <time title="创建时间：2019-10-24 16:01:26 / 修改时间：16:20:39" itemprop="dateCreated datePublished" datetime="2019-10-24T16:01:26+08:00">2019-10-24</time>
             </span>
           
 
@@ -371,100 +371,102 @@
 
       
         <p>1、onmouseenter：当鼠标进入选区执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red&quot; onmouseenter=&quot;alert(bem)&quot;&gt;123456&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red&quot; onmouseenter=&quot;alert(bem)&quot;&gt;123456&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>2、onmouseleave：当鼠标离开选区执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;DIV onmouseleave=&quot;alert(‘bem‘)&quot; style=&quot;BACKGROUND-COLOR: red&quot;&gt;123456&lt;/DIV&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;DIV onmouseleave=&quot;alert(‘bem‘)&quot; style=&quot;BACKGROUND-COLOR: red&quot;&gt;123456&lt;/DIV&gt;</span><br></pre></td></tr></table></figure>
 
 <p>3、onmousewheel：当鼠标在选区滚轮时执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;DIV onmousewheel=&quot;alert(‘bem‘)&quot; style=&quot;BACKGROUND-COLOR: red&quot;&gt;123456&lt;/DIV&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;DIV onmousewheel=&quot;alert(‘bem‘)&quot; style=&quot;BACKGROUND-COLOR: red&quot;&gt;123456&lt;/DIV&gt;</span><br></pre></td></tr></table></figure>
 
 <p>4、onscroll：拖动滚动条执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;width:100px;height:100px;overflow:scroll&quot; onscroll=&quot;alert(bem)&quot;&gt;123456</span><br><span class="line">  &lt;br/&gt;</span><br><span class="line">  &lt;br/&gt;</span><br><span class="line">  &lt;br/&gt;</span><br><span class="line">  &lt;br/&gt;</span><br><span class="line">  &lt;br/&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">1234567</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;width:100px;height:100px;overflow:scroll&quot; onscroll=&quot;alert(bem)&quot;&gt;123456</span><br><span class="line">  &lt;br/&gt;</span><br><span class="line">  &lt;br/&gt;</span><br><span class="line">  &lt;br/&gt;</span><br><span class="line">  &lt;br/&gt;</span><br><span class="line">  &lt;br/&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>5、onfocusin：当获得焦点时执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;background-color:red&quot; onfocusin=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;background-color:red&quot; onfocusin=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>6、onfocusout：当失去焦点时执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;background-color:red&quot; onfocusout=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;background-color:red&quot; onfocusout=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>7、onstart：当显示内容时执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;marquee style=&quot;background-color:red&quot; onstart=&quot;alert(bem)&quot; &gt;asdf&lt;/marquee&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;marquee style=&quot;background-color:red&quot; onstart=&quot;alert(bem)&quot; &gt;asdf&lt;/marquee&gt;</span><br></pre></td></tr></table></figure>
 
 <p>8、onbeforecopy：选中内容后右键执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red;&quot; onbeforecopy=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red;&quot; onbeforecopy=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>9、onbeforecut：选中内容后右键执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red;&quot; onbeforecut=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red;&quot; onbeforecut=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>10、onbeforeeditfocus：当获得焦点时执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red;&quot; contentEditable=&quot;true&quot; onbeforeeditfocus=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red;&quot; contentEditable=&quot;true&quot; onbeforeeditfocus=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>11、onbeforepaste：选中内容后右键执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red;&quot; =&quot;true&quot; onbeforepaste=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red;&quot; =&quot;true&quot; onbeforepaste=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>12、oncontextmenu：鼠标右键执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red;&quot; oncontextmenu=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red;&quot; oncontextmenu=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>13、oncopy：鼠标右键执行复制时执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red;&quot; oncopy=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red;&quot; oncopy=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>14、oncut：鼠标右键执行剪切时执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;background-color:red;&quot; oncut=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;background-color:red;&quot; oncut=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>15、ondrag：选择内容并拖动时执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red;&quot; ondrag=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red;&quot; ondrag=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>16、ondragend：选择内容并拖动松开鼠标执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red;&quot; ondragend=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red;&quot; ondragend=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>17、ondragenter：选择内容并拖动时执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red;&quot; ondragenter=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div style=&quot;background-color:red;&quot; ondragenter=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>18、ondragleave：选择内容并拖出边框执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;background-color:red;&quot; ondragleave=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;background-color:red;&quot; ondragleave=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>19、ondragover：选择内容并拖动时执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;background-color:red;&quot; ondragover=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;background-color:red;&quot; ondragover=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>20、ondragstart：选择内容并拖动时执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;background-color:red;&quot; ondragstart=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;background-color:red;&quot; ondragstart=&quot;alert(‘bem‘)&quot; &gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>21、ondrop：有内容被拖动进来时执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;&quot; ondrop=&quot;alert(bem)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;&quot; ondrop=&quot;alert(bem)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">12</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;&quot; ondrop=&quot;alert(bem)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;&quot; ondrop=&quot;alert(bem)&quot; &gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>22、onlosecapture：选择内容时执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;&quot; onlosecapture=&quot;alert(bem)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;&quot; onlosecapture=&quot;alert(bem)&quot; &gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>23、onpaste：粘贴时执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;&quot; onpaste=&quot;alert(bem)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;&quot; onpaste=&quot;alert(bem)&quot; &gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>24、onselectstart：选择内容时执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;&quot; onselectstart=&quot;alert(bem)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;&quot; onselectstart=&quot;alert(bem)&quot; &gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>25、onhelp：进入焦点按F1时执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;&quot; onhelp=&quot;alert(bem)&quot; &gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; style=&quot;&quot; onhelp=&quot;alert(bem)&quot; &gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>26、onEnd：当时间线执行完毕时执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div STYLE=&quot;behavior:url(#default#time2)&quot; onEnd=&quot;alert(bem)&quot;&gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div STYLE=&quot;behavior:url(#default#time2)&quot; onEnd=&quot;alert(bem)&quot;&gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>27、onBegin：当时间线开始执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div STYLE=&quot;behavior:url(#default#time2)&quot; onBegin=&quot;alert(bem)&quot;&gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div STYLE=&quot;behavior:url(#default#time2)&quot; onBegin=&quot;alert(bem)&quot;&gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>28、onactivate：激活当前标签时执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; STYLE=&quot;&quot; onactivate=&quot;alert(bem)&quot;&gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; STYLE=&quot;&quot; onactivate=&quot;alert(bem)&quot;&gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>29、onfilterchange：当滤镜改变时执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; STYLE=&quot;filter: Alpha(opacity=100, style=2);&quot; onfilterchange=&quot;alert(bem)&quot;&gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; STYLE=&quot;filter: Alpha(opacity=100, style=2);&quot; onfilterchange=&quot;alert(bem)&quot;&gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>30、onbeforeactivate：当激活当前标签时执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; STYLE=&quot;&quot; onbeforeactivate=&quot;alert(bem)&quot;&gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; STYLE=&quot;&quot; onbeforeactivate=&quot;alert(bem)&quot;&gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>31、onbeforedeactivate：当标签内值改变时执行代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; STYLE=&quot;&quot; onbeforedeactivate=&quot;alert(bem)&quot;&gt;asdf&lt;/div&gt;</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; STYLE=&quot;&quot; onbeforedeactivate=&quot;alert(bem)&quot;&gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
 
 <p>32、ondeactivate：当标签内值改变时执行代码</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div contentEditable=&quot;true&quot; STYLE=&quot;&quot; ondeactivate=&quot;alert(bem)&quot;&gt;asdf&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+
       
     </div>
 
