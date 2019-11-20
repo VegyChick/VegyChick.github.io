@@ -94,17 +94,17 @@
 
 
 
-  <meta name="description" content="https://github.com/yinchengtsinghua">
+  <meta name="description" content="F5修改cookie机制F5 LTM做负载均衡时，有多种机制实现会话保持。 其中用到很多的一种是通过修改cookie来实现的。 具体说来，F5在获取到客户端第一次请求时，会使用set cookie头，给客户端埋入一个特定的cookie。 比如： Set-Cookie: BIGipServerpool_8.29_8030=487098378.24095.0000 后续再接到客户端请求时，F5会查看c">
 <meta property="og:type" content="article">
-<meta property="og:title" content="几大流行公链github代码注释翻译版本">
-<meta property="og:url" content="http://yoursite.com/2019/10/16/几大流行公链github代码注释翻译版本/index.html">
+<meta property="og:title" content="透过F5获取服务器真实内网IP技巧">
+<meta property="og:url" content="http://yoursite.com/2019/11/20/透过F5获取服务器真实内网IP技巧/index.html">
 <meta property="og:site_name" content="菜鸟博客">
-<meta property="og:description" content="https://github.com/yinchengtsinghua">
+<meta property="og:description" content="F5修改cookie机制F5 LTM做负载均衡时，有多种机制实现会话保持。 其中用到很多的一种是通过修改cookie来实现的。 具体说来，F5在获取到客户端第一次请求时，会使用set cookie头，给客户端埋入一个特定的cookie。 比如： Set-Cookie: BIGipServerpool_8.29_8030=487098378.24095.0000 后续再接到客户端请求时，F5会查看c">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-10-16T11:29:05.678Z">
+<meta property="og:updated_time" content="2019-11-20T07:38:40.914Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="几大流行公链github代码注释翻译版本">
-<meta name="twitter:description" content="https://github.com/yinchengtsinghua">
+<meta name="twitter:title" content="透过F5获取服务器真实内网IP技巧">
+<meta name="twitter:description" content="F5修改cookie机制F5 LTM做负载均衡时，有多种机制实现会话保持。 其中用到很多的一种是通过修改cookie来实现的。 具体说来，F5在获取到客户端第一次请求时，会使用set cookie头，给客户端埋入一个特定的cookie。 比如： Set-Cookie: BIGipServerpool_8.29_8030=487098378.24095.0000 后续再接到客户端请求时，F5会查看c">
 
 
 
@@ -112,7 +112,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/2019/10/16/几大流行公链github代码注释翻译版本/">
+  <link rel="canonical" href="http://yoursite.com/2019/11/20/透过F5获取服务器真实内网IP技巧/">
 
 
 
@@ -122,7 +122,7 @@
   };
 </script>
 
-  <title>几大流行公链github代码注释翻译版本 | 菜鸟博客</title>
+  <title>透过F5获取服务器真实内网IP技巧 | 菜鸟博客</title>
   
 
 
@@ -285,7 +285,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/16/几大流行公链github代码注释翻译版本/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/20/透过F5获取服务器真实内网IP技巧/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="VegyChick">
@@ -302,7 +302,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">几大流行公链github代码注释翻译版本
+          <h1 class="post-title" itemprop="name headline">透过F5获取服务器真实内网IP技巧
 
               
             
@@ -328,7 +328,7 @@
                 
               
 
-              <time title="创建时间：2019-10-16 19:27:52 / 修改时间：19:29:05" itemprop="dateCreated datePublished" datetime="2019-10-16T19:27:52+08:00">2019-10-16</time>
+              <time title="创建时间：2019-11-20 15:22:49 / 修改时间：15:38:40" itemprop="dateCreated datePublished" datetime="2019-11-20T15:22:49+08:00">2019-11-20</time>
             </span>
           
 
@@ -370,7 +370,18 @@
       
 
       
-        <p><a href="https://github.com/yinchengtsinghua" target="_blank" rel="noopener">https://github.com/yinchengtsinghua</a></p>
+        <h2 id="F5修改cookie机制"><a href="#F5修改cookie机制" class="headerlink" title="F5修改cookie机制"></a><strong>F5修改cookie机制</strong></h2><p>F5 LTM做负载均衡时，有多种机制实现会话保持。 其中用到很多的一种是通过修改cookie来实现的。</p>
+<p>具体说来，F5在获取到客户端第一次请求时，会使用set cookie头，给客户端埋入一个特定的cookie。</p>
+<p>比如： Set-Cookie: BIGipServerpool_8.29_8030=487098378.24095.0000</p>
+<p>后续再接到客户端请求时，F5会查看cookie里面的字段，判断应该交给后续哪台服务器。</p>
+<p>作为传统大厂，F5当然不会傻到直接把服务器IP address写入到cookie里面。 F5很巧妙的把server的真实IP address做了两次编码，然后再插入cookie。</p>
+<p>所以，只要依据解码流畅，解开487098378.24095.0000的内容，就拿到了server的真实IP address。</p>
+<h2 id="解码思路"><a href="#解码思路" class="headerlink" title="解码思路"></a><strong>解码思路</strong></h2><p>首先，把第一小节的十进制数取出来，也即，487098378 第二，将其转为十六进制数1d08880a 第三，从后至前，以此取四位数出来，也即，0a；88；08；1d； 第四，依次把他们转为十进制数：10；136；8；29 最后，得到真实内网IP：10.136.8.29</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h2><p>严格意义上说，只有内网的私有IP，对正面突破目标防线的帮助并不明显。 但是，当需要做内网渗透和漫游的时候，这一点信息还是有价值的。 再不济，写report的时候，如果实在没的可写的时候，还可以拿这点作为一个issue作为丰富report的素材。</p>
+<p>#<a href="https://www.secpulse.com/archives/58730.html" target="_blank" rel="noopener">https://www.secpulse.com/archives/58730.html</a></p>
+<h2 id="安全脉搏附F5-cookies解密脚本"><a href="#安全脉搏附F5-cookies解密脚本" class="headerlink" title="安全脉搏附F5 cookies解密脚本"></a><strong>安全脉搏附F5 cookies解密脚本</strong></h2><p>给一个比较好用的py版本，可以带端口的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/python</span><br><span class="line"></span><br><span class="line"># example string: 110536896.20480.0000</span><br><span class="line"></span><br><span class="line">import struct</span><br><span class="line">import sys</span><br><span class="line"></span><br><span class="line">if len(sys.argv) != 2:</span><br><span class="line">print &quot;Usage: %s encoded_string&quot; % sys.argv[0]</span><br><span class="line">exit(1)</span><br><span class="line"></span><br><span class="line">encoded_string = sys.argv[1]</span><br><span class="line">print &quot;\n[*] String to decode: %s\n&quot; % encoded_string</span><br><span class="line"></span><br><span class="line">(host, port, end) = encoded_string.split(&apos;.&apos;)</span><br><span class="line"></span><br><span class="line">(a, b, c, d) = [ord(i) for i in struct.pack(&quot;&lt;I&quot;, int(host))]</span><br><span class="line"></span><br><span class="line">(e) = [ord(e) for e in struct.pack(&quot;&lt;H&quot;, int(port))]</span><br><span class="line">port = &quot;0x%02X%02X&quot; % (e[0],e[1])</span><br><span class="line"></span><br><span class="line">print &quot;[*] Decoded Host and Port: %s.%s.%s.%s:%s\n&quot; % (a,b,c,d, int(port,16))</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -401,8 +412,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/10/13/浏览器同源策略及跨域解决方案/" rel="next" title="浏览器同源策略及跨域解决方案">
-                <i class="fa fa-chevron-left"></i> 浏览器同源策略及跨域解决方案
+              <a href="/2019/11/08/巧用DNSlog实现无回显注入/" rel="next" title="巧用DNSlog实现无回显注入">
+                <i class="fa fa-chevron-left"></i> 巧用DNSlog实现无回显注入
               </a>
             
           </div>
@@ -410,10 +421,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/10/16/ERC20标准/" rel="prev" title="ERC20标准">
-                ERC20标准 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -457,8 +464,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -504,6 +520,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#F5修改cookie机制"><span class="nav-number">1.</span> <span class="nav-text">F5修改cookie机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解码思路"><span class="nav-number">2.</span> <span class="nav-text">解码思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安全脉搏附F5-cookies解密脚本"><span class="nav-number">4.</span> <span class="nav-text">安全脉搏附F5 cookies解密脚本</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       
