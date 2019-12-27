@@ -285,6 +285,182 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/27/Zabbix漏洞汇总/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="VegyChick">
+      <meta itemprop="description" content="沉迷渗透测试的信安菜鸟">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="菜鸟博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/12/27/Zabbix漏洞汇总/" class="post-title-link" itemprop="url">Zabbix漏洞汇总</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-12-27 11:21:13 / 修改时间：11:41:25" itemprop="dateCreated datePublished" datetime="2019-12-27T11:21:13+08:00">2019-12-27</time>
+            </span>
+          
+
+          
+            
+
+            
+          
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>一、zabbix：</p>
+<p>zabbix是监控是一个基于WEB界面的提供分布式系统监视以及网络监视功能的企业级的开源解决方案。zabbix能监视各种网络参数，保证服务器系统的安全运营；并提供灵活的通知机制以让系统管理员快速定位/解决存在的各种问题。</p>
+<p>二、Zabbix漏洞：</p>
+<p>1、弱口令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WeapPassword = [(&quot;admin&quot;,&quot;zabbix&quot;),(&quot;Admin&quot;,&quot;zabbix&quot;),(&quot;guest&quot;,&quot;&quot;)]</span><br></pre></td></tr></table></figure>
+
+<p>2、SQL注入</p>
+<p>（1）</p>
+<p>标题：latest.php处toogle_ids[]参数SQL注入</p>
+<p>攻击条件：登陆后</p>
+<p>危害：可获取系统权限</p>
+<p>URL以及payload：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://a.b.c.d/latest.php?output=ajax&amp;sid=登录后的sessionid的后16位&amp;favobj=toggle&amp;toggle_open_state=1&amp;toggle_ids[]=15385); select * from users where (1=1</span><br></pre></td></tr></table></figure>
+
+<p>（2）</p>
+<p>标题：jsrpc.php处profileIdx2参数SQL注入</p>
+<p>攻击条件：无需登录，亦可以登录后使用高权限的sid、cookie进行替换</p>
+<p>危害：一般SQL注入危害</p>
+<p>URL以及payload：</p>
+<p><code>&quot;&quot;&quot;</code><br><code>http://a.b.c.d/jsrpc.php?sid=0bcd4ade648214dc&amp;type=9&amp;method=screen.get&amp;timestamp=1471403798083&amp;mode=2&amp;screenid=&amp;groupid=&amp;hostid=0&amp;pageFile=history.php&amp;profileIdx=web.item.graph&amp;profileIdx2=1+or+updatexml(1,md5(0x11),1)+or+1=1)%23&amp;updateProfile=true&amp;screenitemid=&amp;period=3600&amp;stime=20160817050632&amp;resourcetype=17&amp;itemids%5B23297%5D=23297&amp;action=showlatest&amp;filter=&amp;filter_task=&amp;mark_color=1</code><br><code>&quot;&quot;&quot;</code></p>
+<p>（3）</p>
+<p>标题：其他SQL注入漏洞：chart_bar.php处itemid参数和periods参数SQL注入；httpmon.php处applications参数SQL注入</p>
+<p>攻击条件：不详</p>
+<p>危害：不详</p>
+<p>URL以及payload：一般SQL注入payload尝试</p>
+<p>3、OS命令注入执行：</p>
+<p>（1）弱口令登录后，使用zabbix自带的Script执行系统命令可以反弹shell等等</p>
+<p>（2）防御：</p>
+<p>　　#不要设置AllowRoot=1，避免agent和server以root权限启动。</p>
+<p>　　#进制agent执行system.run，不要设置EnableRemoteCommands=1。</p>
+<p>​    　#即使打补丁。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/11/CSRF绕过Referer校验/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1842,255 +2018,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/23/php反序列化漏洞实战经验/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="VegyChick">
-      <meta itemprop="description" content="沉迷渗透测试的信安菜鸟">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="菜鸟博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/10/23/php反序列化漏洞实战经验/" class="post-title-link" itemprop="url">php反序列化漏洞实战经验</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-10-23 00:05:23 / 修改时间：00:06:38" itemprop="dateCreated datePublished" datetime="2019-10-23T00:05:23+08:00">2019-10-23</time>
-            </span>
-          
-
-          
-            
-
-            
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><strong>什么是序列化与反序列化</strong></p>
-<p>维基百科中这样定义：序列化（serialization）在计算机科学的数据处理中，是指将数据结构或对象状态转换成可取用格式（例如存成文件，存于缓冲，或经由网络中发送），以留待后续在相同或另一台计算机环境中，能恢复原先状态的过程。  </p>
-<p>概念很容易理解，其实就是将数据转化成一种可逆的数据结构，自然，逆向的过程就叫做反序列化。</p>
-<p>那么序列化与反序列化有什么用处呢？ </p>
-<p>举个例子：</p>
-<p>比如：现在我们都会在淘宝上买桌子，桌子这种很不规则的东西，该怎么从一个城市运输到另一个城市，这时候一般都会把它拆掉成板子，再装到箱子里面，就可以快递寄出去了，这个过程就类似我们的序列化的过程（把数据转化为可以存储或者传输的形式）。当买家收到货后，就需要自己把这些板子组装成桌子的样子，这个过程就像反序列的过程（转化成当初的数据对象）。</p>
-<p>也就是说，序列化的目的是方便数据的传输和存储。</p>
-<p>在PHP应用中，序列化和反序列化一般用做缓存，比如session缓存，cookie等。  </p>
-<p>常见的序列化格式：</p>
-<ul>
-<li>二进制格式</li>
-<li>字节数组</li>
-<li>json字符串</li>
-<li>xml字符串 </li>
-</ul>
-<p><strong>PHP序列化与反序列化</strong></p>
-<p>PHP通过string serialize ( mixed $value )和mixed unserialize ( string $str )两个函数实现序列化和反序列化。</p>
-<p>下面是比较典型的PHP反序列化漏洞中可能会用到的魔术方法：</p>
-<p>void __wakeup ( void )</p>
-<p>unserialize( )会检查是否存在一个_wakeup( ) 方法。如果存在，则会先调用_wakeup 方法，预先准备对象需要的资源。</p>
-<p>void __construct ([ mixed $args [, $… ]])</p>
-<p>具有构造函数的类会在每次创建新对象时先调用此方法。</p>
-<p>void __destruct ( void )</p>
-<p>析构函数会在到某个对象的所有引用都被删除或者当对象被显式销毁时执行。</p>
-<p>public string __toString ( void )</p>
-<p>__toString( ) 方法用于一个类被当成字符串时应怎样回应。例如 echo $obj;应该显示些什么。</p>
-<p>此方法必须返回一个字符串，否则将发出一条 E_RECOVERABLE_ERROR 级别的致命错误。</p>
-<p><strong>PHP反序列化漏洞</strong></p>
-<p><strong>漏洞成因</strong></p>
-<p>PHP反序列化漏洞又称PHP对象注入，是因为程序对输入数据处理不当导致的。</p>
-<p>先看一个例子：</p>
-<p><a href="https://image.3001.net/images/20190306/1551867117_5c7f9ced2cdbb.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20190306/1551867117_5c7f9ced2cdbb.png!small" alt="11.png"></a></p>
-<p>这个例子中，析构函数会回显$test的值，我们可以构造一个对象，控制$test的值，达到控制数据流的目的，实现反序列化漏洞的利用。</p>
-<p>构造过程如下：</p>
-<p><a href="https://image.3001.net/images/20190306/1551867156_5c7f9d14e49e0.png" target="_blank" rel="noopener"><img src="https://image.3001.net/images/20190306/1551867156_5c7f9d14e49e0.png!small" alt="2.png"></a></p>
-<p><strong>利用方式</strong></p>
-<p><strong>一、__wakeup( )绕过</strong></p>
-<p>(CVE-2016-7124)</p>
-<p>反序列化时，如果表示对象属性个数的值大于真实的属性个数时就会跳过__wakeup( )的执行。</p>
-<p>影响版本：</p>
-<ul>
-<li>PHP before 5.6.25</li>
-<li>7.x before 7.0.10</li>
-</ul>
-<p>DEMO如下：</p>
-<p><img src="https://image.3001.net/images/20190306/1551867216_5c7f9d50b7627.png!small" alt="3.png"><img src="https://image.3001.net/images/20190306/1551867250_5c7f9d72ba443.png!small" alt="4.png"></p>
-<p><strong>二、注入对象构造方法</strong></p>
-<p>当目标对象被private、protected修饰时的构造方法。</p>
-<p>示例代码：</p>
-<p><img src="https://image.3001.net/images/20190306/1551867287_5c7f9d97ed3e8.png!small" alt="5.png"><img src="https://image.3001.net/images/20190306/1551867327_5c7f9dbfb5df9.png!small" alt="6.png"></p>
-<p>这个例子中，class B和class C有一个同名方法action，我们可以构造目标对象，使得析构函数调用class C的action方法，实现任意代码执行。</p>
-<p>构造代码：</p>
-<p><img src="https://image.3001.net/images/20190306/1551867367_5c7f9de7478f0.png!small" alt="7.png"></p>
-<p><strong>三、Session反序列化漏洞</strong></p>
-<p>PHP中的Session经序列化后存储，读取时再进行反序列化。</p>
-<p>相关配置：</p>
-<p><strong>session.save_path=””</strong>        //设置session的存储路径</p>
-<p><strong>session.save_handler=””</strong>     //设定用户自定义存储函数，如果想使用PHP内置会话存储机制之外的可以使用本函数(数据库等方式) </p>
-<p><strong>session.auto_start boolen</strong>   //指定会话模块是否在请求开始时启动一个会话默认为0不启动</p>
-<p><strong>session.serialize_handler</strong> <strong>string</strong>//定义用来序列化/反序列化的处理器名字。默认使用php</p>
-<p>PHP中有三种序列化处理器，如下表所示：</p>
-<p><img src="https://image.3001.net/images/20190306/1551867418_5c7f9e1ad4312.png!small" alt="8.png">示例代码：</p>
-<p><img src="https://image.3001.net/images/20190306/1551867460_5c7f9e44d2e8b.png!small" alt="9.png"></p>
-<p>命名为sess_Session_id。</p>
-<p>存储内容为序列化后的session：test|s:4:”test”;</p>
-<p>不同处理器的格式不同，当不同页面使用了不同的处理器时，由于处理的Session序列化格式不同，就可能产生反序列化漏洞。</p>
-<p>下面演示漏洞利用：</p>
-<p><img src="https://image.3001.net/images/20190306/1551867493_5c7f9e6516fb6.png!small" alt="10.png">该页面中有类demo3，开启session，并用php处理器处理session。</p>
-<p><img src="https://image.3001.net/images/20190306/1551867519_5c7f9e7f7ccdc.png!small" alt="12.png"></p>
-<p>通过session.php设置session，通过generate.php构造实例。</p>
-<p>由于session.php与demo3.php采用的序列化处理器不同，我们可以构造“误导”处理器，达到漏洞利用的目的。</p>
-<p>实例构造：</p>
-<p><img src="https://image.3001.net/images/20190306/1551867561_5c7f9ea95e926.png!small" alt="13.png"></p>
-<p>访问demo3.php成功创建了一个类demo3的实例。</p>
-<p><strong>四、PHAR利用</strong></p>
-<p>1、PHAR简介</p>
-<p>PHAR (“Php ARchive”) 是PHP里类似于JAR的一种打包文件，在PHP 5.3 或更高版本中默认开启，这个特性使得 PHP也可以像 Java 一样方便地实现应用程序打包和组件化。一个应用程序可以打成一个 Phar 包，直接放到 PHP-FPM 中运行。</p>
-<p>2、PHAR文件结构</p>
-<p>PHAR文件由3或4个部分组成：  </p>
-<p>（1）stub  //PHAR文件头</p>
-<p>stub就是一个简单的php文件，最简文件头为：</p>
-<?php __HALT_COMPILER( )；?><p>是可有可无的，若使用?&gt;，则;与?&gt;间至多一个空格。</p>
-<p>文件头中必须包含__HALT_COMPILER();除此之外没有限制。（PHP通过stub识别一个文件为PHAR文件，可以利用这点绕过文件上传检测）</p>
-<p>（2）manifest describing the contents  //PHAR文件描述该部分存储文件名、文件大小等信息，如下图所示。</p>
-<p><img src="https://image.3001.net/images/20190306/1551867591_5c7f9ec73cdea.png!small" alt="14.png"></p>
-<p>图中标出的地方，存储了经serialize( )的Meta-data，有序列化过程必有反序列化过程，这就是我们的注入点。</p>
-<p>（3）the file contents</p>
-<p>PHAR文件内容</p>
-<p>（4）[optional] a signature for verifying Phar integrity (phar file format only)  //可选的签名部分，支持MD5和SHA1</p>
-<p><img src="https://image.3001.net/images/20190306/1551867630_5c7f9eee86ed3.png!small" alt="15.png"></p>
-<p>3、攻击方法</p>
-<p>2018年Black Hat研究院Sam Thomas的议题：</p>
-<p>It’s a PHP unserialization vulnerability Jim, but not as we know it提供了一种新的php反序列化攻击姿势。PHAR文件的Meta-data可以是任何能够序列化的PHP对象，当PHAR文件被任何<strong>文件系统函数首次</strong>通过phar://协议解析时Meta-data部分会被反序列化，这个反序列化过程就是我们的攻击点，Meta-data部分填充payload。</p>
-<p>漏洞利用条件：  </p>
-<p>在目标系统上投放一个装在payload的可访问的PHAR文件，通过文件系统函数利用phar://伪协议解析目标PHAR文件。</p>
-<p>下面演示利用过程：</p>
-<p>先创建一个PHAR文件。</p>
-<p>注意：<strong>要将php.ini中的phar.readonly选项设置为Off，否则无法生成phar文件。</strong></p>
-<p><strong><img src="https://image.3001.net/images/20190306/1551867666_5c7f9f120a4d5.png!small" alt="16.png"></strong>箭头标出Meta-data部分，可以看到为序列化后结果。</p>
-<p><strong><img src="https://image.3001.net/images/20190306/1551867716_5c7f9f440ae4e.png!small" alt="17.png"></strong></p>
-<p>输出了之前打包的phar文件中，test.txt文件内容，并成功实例化TestObject对象，调用了析构函数。</p>
-<p>由于PHP仅通过stub部分判断文件是否为PHAR文件，我们可以通过添加文件头、修改后缀的方式绕过上传检测。</p>
-<p>示例代码：</p>
-<p><img src="https://image.3001.net/images/20190306/1551867749_5c7f9f65ab119.png!small" alt="18.png"></p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2137,7 +2064,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">24</span>
+                    <span class="site-state-item-count">25</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
