@@ -285,6 +285,167 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/23/PHP魔术方法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="VegyChick">
+      <meta itemprop="description" content="沉迷渗透测试的信安菜鸟">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="菜鸟博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/10/23/PHP魔术方法/" class="post-title-link" itemprop="url">PHP魔术方法</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+
+          
+          
+          
+
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-23 11:11:31 / 修改时间：11:20:44" itemprop="dateCreated datePublished" datetime="2019-10-23T11:11:31+08:00">2019-10-23</time>
+            </span>
+          
+
+          
+            
+
+            
+          
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          <br>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="1、get、set"><a href="#1、get、set" class="headerlink" title="1、get、set"></a>1、<strong>get、</strong>set</h3><p>这两个方法是为在类和他们的父类中没有声明的属性而设计的</p>
+<p>get( $property )       当调用一个未定义的属性时访问此方法<br>set( $property, $value )    给一个未定义的属性赋值时调用<br>这里的没有声明包括访问控制为proteced,private的属性（即没有权限访问的属性）</p>
+<h3 id="2、isset、unset"><a href="#2、isset、unset" class="headerlink" title="2、isset、unset"></a>2、<strong>isset、</strong>unset</h3><p>isset( $property ) 当在一个未定义的属性上调用isset()函数时调用此方法<br>unset( $property ) 当在一个未定义的属性上调用unset()函数时调用此方法<br>与get方法和set方法相同，这里的没有声明包括访问控制为proteced,private的属性（即没有权限访问的属性）</p>
+<h3 id="3、-call"><a href="#3、-call" class="headerlink" title="3、__call"></a>3、__call</h3><p>__call( $method, $arg_array ) 当调用一个未定义(包括没有权限访问)的方法是调用此方法</p>
+<h3 id="4、-autoload"><a href="#4、-autoload" class="headerlink" title="4、__autoload"></a>4、__autoload</h3><p>__autoload 函数，使用尚未被定义的类时自动调用。通过此函数，脚本引擎在 PHP 出错失败前有了最后一个机会加载所需的类。</p>
+<p>注意: 在 __autoload 函数中抛出的异常不能被 catch 语句块捕获并导致致命错误。</p>
+<h3 id="5、construct、destruct"><a href="#5、construct、destruct" class="headerlink" title="5、construct、destruct"></a>5、<strong>construct、</strong>destruct</h3><p>construct 构造方法，当一个对象被创建时调用此方法，好处是可以使构造方法有一个独一无二的名称，无论它所在的类的名称是什么，这样你在改变类的名称时，就不需要改变构造方法的名称<br>destruct 析构方法，PHP将在对象被销毁前（即从内存中清除前）调用这个方法<br>默认情况下,PHP仅仅释放对象属性所占用的内存并销毁对象相关的资源.，析构函数允许你在使用一个对象之后执行任意代码来清除内存，当PHP决定你的脚本不再与对象相关时，析构函数将被调用.，在一个函数的命名空间内，这会发生在函数return的时候，对于全局变量，这发生于脚本结束的时候，如果你想明确地销毁一个对象，你可以给指向该对象的变量分配任何其它值，通常将变量赋值勤为NULL或者调用unset。</p>
+<h3 id="6、-clone"><a href="#6、-clone" class="headerlink" title="6、__clone"></a>6、__clone</h3><p>PHP5中的对象赋值是使用的引用赋值，使用clone方法复制一个对象时，对象会自动调用clone魔术方法，如果在对象复制需要执行某些初始化操作，可以在clone方法实现。</p>
+<h3 id="7、-toString"><a href="#7、-toString" class="headerlink" title="7、__toString"></a>7、__toString</h3><p>__toString方法在将一个对象转化成字符串时自动调用，比如使用echo打印对象时，如果类没有实现此方法，则无法通过echo打印对象，否则会显示：Catchable fatal error: Object of class test could not be converted to string in，此方法必须返回一个字符串。</p>
+<p>在PHP 5.2.0之前，toString方法只有结合使用echo() 或 print()时 才能生效。PHP 5.2.0之后，则可以在任何字符串环境生效（例如通过printf()，使用%s修饰符），但 不能用于非字符串环境（如使用%d修饰符）。从PHP 5.2.0，如果将一个未定义toString方法的对象 转换为字符串，会报出一个E_RECOVERABLE_ERROR错误。</p>
+<h3 id="8、sleep、wakeup"><a href="#8、sleep、wakeup" class="headerlink" title="8、sleep、wakeup"></a>8、<strong>sleep、</strong>wakeup</h3><p>sleep 串行化的时候用<br>wakeup 反串行化的时候调用<br>serialize() 检查类中是否有魔术名称 __sleep 的函数。如果这样，该函数将在任何序列化之前运行。它可以清除对象并应该返回一个包含有该对象中应被序列化的所有变量名的数组。</p>
+<p>使用 __sleep 的目的是关闭对象可能具有的任何数据库连接，提交等待中的数据或进行类似的清除任务。此外，如果有非常大的对象而并不需要完全储存下来时此函数也很有用。</p>
+<p>相反地，unserialize() 检查具有魔术名称 wakeup 的函数的存在。如果存在，此函数可以重建对象可能具有的任何资源。使用 wakeup 的目的是重建在序列化中可能丢失的任何数据库连接以及处理其它重新初始化的任务。</p>
+<h3 id="9、-set-state"><a href="#9、-set-state" class="headerlink" title="9、__set_state"></a>9、__set_state</h3><p>当调用var_export()时，这个静态 方法会被调用（自PHP 5.1.0起有效）。本方法的唯一参数是一个数组，其中包含按array(’property’ =&gt; value, …)格式排列的类属性。</p>
+<h3 id="10、-invoke"><a href="#10、-invoke" class="headerlink" title="10、__invoke"></a>10、__invoke</h3><p>当尝试以调用函数的方式调用一个对象时，__invoke 方法会被自动调用。PHP5.3.0以上版本有效</p>
+<h3 id="11、-callStatic"><a href="#11、-callStatic" class="headerlink" title="11、__callStatic"></a>11、__callStatic</h3><p>它的工作方式类似于 call() 魔术方法，callStatic() 是为了处理静态方法调用，PHP5.3.0以上版本有效，PHP 确实加强了对 callStatic() 方法的定义；它必须是公共的，并且必须被声明为静态的。同样，call() 魔术方法必须被定义为公共的，所有其他魔术方法都必须如此。</p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/23/php反序列化漏洞实战经验/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2516,153 +2677,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/12/ios渗透测试/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="VegyChick">
-      <meta itemprop="description" content="沉迷渗透测试的信安菜鸟">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="菜鸟博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/10/12/ios渗透测试/" class="post-title-link" itemprop="url">ios渗透测试</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-
-          
-          
-          
-
-          
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2019-10-12 11:56:02 / 修改时间：14:00:14" itemprop="dateCreated datePublished" datetime="2019-10-12T11:56:02+08:00">2019-10-12</time>
-            </span>
-          
-
-          
-            
-
-            
-          
-
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          <br>
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="IOSapp文件位置"><a href="#IOSapp文件位置" class="headerlink" title="IOSapp文件位置"></a>IOSapp文件位置</h3><p>在/var/mobile（）/Containers/Bundle/Application/文件夹下，根据时间日期判断。</p>
-<p>或者ps -elf查看。</p>
-
-          
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2709,7 +2723,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">25</span>
+                    <span class="site-state-item-count">26</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2755,7 +2769,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
